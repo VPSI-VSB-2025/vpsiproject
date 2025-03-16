@@ -2,6 +2,8 @@
 
 # 🛠 Front-end Stack
 
+<br>
+
 ## **1️⃣ Základní technologie**
 
 -   **[Next.js](https://nextjs.org/)** – SSR, ISR, SSG, optimalizace obrázků, SEO-friendly
@@ -40,3 +42,5 @@
 # 🛠 Back-end Stack
 
 # 🛠 DB Stack
+
+-   **[ postgres](https://www.postgresql.org/)** – je to free
