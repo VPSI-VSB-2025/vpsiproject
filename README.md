@@ -117,7 +117,7 @@ frontend/
 │   ├── store/           # Zustand store
 │   ├── types/           # TypeScript typy a definice
 │   └── middleware.ts    # Clerk.js middleware (a další)
-├── .env.local           # Lokální proměnné prostředí (není v gitu)
+├── .env           # Lokální proměnné prostředí (není v gitu)
 ├── .eslintrc.json       # ESLint konfigurace
 ├── .prettierrc          # Prettier konfigurace
 ├── next.config.ts       # Next.js konfigurace
