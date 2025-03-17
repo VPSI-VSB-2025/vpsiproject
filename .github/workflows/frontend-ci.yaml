@@ -41,10 +41,10 @@ jobs:
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
         with:
-          vercel_token: ${{ secrets.VERCEL_TOKEN }} # VERCEL_TOKEN budeš muset nastavit v secrets GitHubu
-          vercel_org_id: ${{ secrets.VERCEL_ORG_ID }} # Nastav v secrets GitHubu
-          vercel_project_id: ${{ secrets.VERCEL_PROJECT_ID }} # Nastav v secrets GitHubu
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # VERCEL_TOKEN budeš muset nastavit v secrets GitHubu
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Nastav v secrets GitHubu
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Nastav v secrets GitHubu
           working-directory: ./frontend
-          vercel_args: "--prod" # Pro deployment na produkci
+          vercel-args: "--prod" # Pro deployment na produkci
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
