@@ -1,0 +1,18 @@
+[build]
+  base = "frontend"
+  publish = ".next"
+  command = "pnpm build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--version"
+
+# For Next.js App Router
+[[plugins]]
+package = "@netlify/plugin-nextjs"
+
+# For local development
+[dev]
+  command = "pnpm dev"
+  port = 3000
+  targetPort = 3000

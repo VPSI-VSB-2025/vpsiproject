@@ -38,13 +38,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # VERCEL_TOKEN budeš muset nastavit v secrets GitHubu
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Nastav v secrets GitHubu
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Nastav v secrets GitHubu
-          working-directory: ./frontend
-          vercel-args: "--prod" # Pro deployment na produkci
+          publish-dir: "./frontend/.next"
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 10
