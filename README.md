@@ -173,6 +173,6 @@ Nasazení frontendové aplikace je automatizováno pomocí **GitHub Actions** a 
    - Ověření typu kódu (TypeScript).
    - Kontrolu kódových standardů (Linting).
 
-2. **CD krok**: Jakmile je kód validován, nasazení na **Vercel** probíhá automaticky. Vercel sleduje `main` větev a při každé změně v `frontend/` složce provede build a nasazení aplikace.
+2. **CD krok**: Jakmile je kód validován, nasazení na **Netlify** probíhá automaticky. Netlify sleduje `main` větev a při každé změně v `frontend/` složce provede build a nasazení aplikace.
 
 Tímto způsobem zajišťujeme, že kód je vždy správně ověřen a automaticky nasazen do produkčního prostředí. ✅
