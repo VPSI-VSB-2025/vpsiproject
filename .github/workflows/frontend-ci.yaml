@@ -43,20 +43,21 @@ jobs:
         with:
           node-version: "18"
 
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Install dependencies and Netlify CLI
+      - name: Install dependencies
         working-directory: frontend
-        run: |
-          pnpm install
-          pnpm add -g netlify-cli
+        run: pnpm install
 
-      - name: Build and Deploy to Netlify
+      # Instead of using a separate build step, we'll use Netlify's build command
+      # This ensures the Next.js Runtime configuration is properly generated
+      - name: Deploy to Netlify
         working-directory: frontend
-        run: |
-          pnpm build
-          pnpm netlify deploy --build --prod
+        run: netlify deploy --build --prod
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
