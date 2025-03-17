@@ -1,0 +1,50 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main # Spustí se pouze při push do main
+    paths:
+      - "frontend/**" # Spustí se pouze pokud se mění něco ve frontend složce
+  pull_request:
+    branches:
+      - main # Spustí se na Pull Request směřující do main
+    paths:
+      - "frontend/**" # Spustí se pouze pokud se mění něco ve frontend složce
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend # Nastaví výchozí adresář na ./frontend
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm install -g pnpm && pnpm install
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+  cd:
+    needs: ci # Zajistí, že deploy běží až po dokončení CI pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel_token: ${{ secrets.VERCEL_TOKEN }} # VERCEL_TOKEN budeš muset nastavit v secrets GitHubu
+          vercel_org_id: ${{ secrets.VERCEL_ORG_ID }} # Nastav v secrets GitHubu
+          vercel_project_id: ${{ secrets.VERCEL_PROJECT_ID }} # Nastav v secrets GitHubu
+          working-directory: ./frontend
+          vercel_args: "--prod" # Pro deployment na produkci
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

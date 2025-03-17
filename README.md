@@ -149,3 +149,30 @@ pnpm lint
 4. Vytvořte pull request do `main` větve
 
 - O Enviroment variables do souboru `/frontend/.env`, požádejte front-end engineera.
+
+## CI/CD Pipeline pro Frontend
+
+Naše CI/CD pipeline pro frontend využívá **GitHub Actions** a zajišťuje automatickou kontrolu kódu před nasazením. Pipeline obsahuje následující kroky:
+
+### 🛠 **CI (Continuous Integration)**
+
+1. **Checkout kódu** – Načte aktuální verzi repozitáře.
+2. **Instalace závislostí** – Používáme `pnpm` pro rychlou a efektivní správu balíčků.
+3. **Typecheck** – Ověřuje správnost TypeScript kódu, aby se předešlo typovým chybám.
+4. **Lint** – Spouští ESLint pro zajištění konzistence kódu.
+
+CI se spouští pouze na **Pull Requesty a commity do `main` branche** a běží pouze pro změny ve složce `frontend/`, což šetří čas i GitHub Actions minuty.
+
+### 🚀 **CD (Continuous Deployment)**
+
+Nasazení frontendové aplikace je automatizováno pomocí **GitHub Actions** a **Vercel**.
+
+1. **CI krok**: Před nasazením probíhá kontrola kódu, která zahrnuje:
+
+   - Instalaci závislostí.
+   - Ověření typu kódu (TypeScript).
+   - Kontrolu kódových standardů (Linting).
+
+2. **CD krok**: Jakmile je kód validován, nasazení na **Vercel** probíhá automaticky. Vercel sleduje `main` větev a při každé změně v `frontend/` složce provede build a nasazení aplikace.
+
+Tímto způsobem zajišťujeme, že kód je vždy správně ověřen a automaticky nasazen do produkčního prostředí. ✅
