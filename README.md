@@ -117,7 +117,7 @@ frontend/
 │   ├── store/           # Zustand store
 │   ├── types/           # TypeScript typy a definice
 │   └── middleware.ts    # Clerk.js middleware (a další)
-├── .env           # Lokální proměnné prostředí (není v gitu)
+├── .env                 # Lokální proměnné prostředí (není v gitu)
 ├── .eslintrc.json       # ESLint konfigurace
 ├── .prettierrc          # Prettier konfigurace
 ├── next.config.ts       # Next.js konfigurace
@@ -141,13 +141,6 @@ frontend/
 pnpm lint
 ```
 
-## Workflow pro přispěvatele
-
-1. Vytvořte novou větev pro váš feature/fix
-2. Napište kód a testy
-3. Ujistěte se, že všechny testy procházejí
-4. Vytvořte pull request do `main` větve
-
 - O Enviroment variables do souboru `/frontend/.env`, požádejte front-end engineera.
 
 ## CI/CD Pipeline pro Frontend
@@ -165,14 +158,29 @@ CI se spouští pouze na **Pull Requesty a commity do `main` branche** a běží
 
 ### 🚀 **CD (Continuous Deployment)**
 
-Nasazení frontendové aplikace je automatizováno pomocí **GitHub Actions** a **Vercel**.
+Nasazení frontendové aplikace je automatizováno pomocí **GitHub Actions** a **Netlify CLI**.
 
-1. **CI krok**: Před nasazením probíhá kontrola kódu, která zahrnuje:
+1. **CD krok**: Po úspěšném dokončení CI pipeline probíhá automatické nasazení, které zahrnuje:
 
-   - Instalaci závislostí.
-   - Ověření typu kódu (TypeScript).
-   - Kontrolu kódových standardů (Linting).
+   - Nastavení Node.js prostředí
+   - Instalaci Netlify CLI
+   - Instalaci závislostí pomocí pnpm
+   - Build a nasazení aplikace pomocí Netlify CLI přímo z GitHub Actions
 
-2. **CD krok**: Jakmile je kód validován, nasazení na **Netlify** probíhá automaticky. Netlify sleduje `main` větev a při každé změně v `frontend/` složce provede build a nasazení aplikace.
+Nasazení se spouští automaticky po úspěšném dokončení CI pipeline a pouze při změnách ve složce `frontend/` na `main` větvi.
+
+Pro správné fungování deployment pipeline jsou vyžadovány následující secrets v GitHub Actions:
+
+- `NETLIFY_AUTH_TOKEN`
+- `NETLIFY_SITE_ID`
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
 
 Tímto způsobem zajišťujeme, že kód je vždy správně ověřen a automaticky nasazen do produkčního prostředí. ✅
+
+## ❗ Workflow pro přispěvatele ❗
+
+1. Vytvořte novou větev pro váš feature/fix
+2. Napište kód a testy
+3. Ujistěte se, že všechny testy procházejí
+4. Vytvořte pull request do `main` větve
