@@ -2,3 +2,4 @@ node_modules
 .next
 .env
 .clerk
+*.DS_Store
