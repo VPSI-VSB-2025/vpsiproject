@@ -1,7 +1,21 @@
-export default function Home() {
+import Navbar from "@/components/custom/navbar-section"
+import CalendarSection from "@/components/custom/calendar-section"
+import HeroSection from "@/components/custom/hero-section"
+import ServiceSection from "@/components/custom/service-section"
+import FooterSection from "@/components/custom/footer-section"
+
+export default function HospitalLandingPage() {
   return (
-    <div className='w-full h-screen flex items-center justify-center'>
-      <div className='font-bold text-3xl'>Nemocnice app - HomePage (netlify deployment test 8)</div>
+    <div className='flex min-h-screen flex-col'>
+      <Navbar />
+
+      <main className='flex-1'>
+        <HeroSection />
+        <ServiceSection />
+        <CalendarSection />
+      </main>
+
+      <FooterSection />
     </div>
   )
 }

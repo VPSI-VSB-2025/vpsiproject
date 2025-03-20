@@ -33,10 +33,10 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang='en'>
+      <html lang='en' className='scroll-smooth'>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <header className='absolute w-full flex justify-end items-center p-4 gap-4 h-16'>
-            <SignedOut>
+            {/* <SignedOut>
               <SignInButton>
                 <Button className='cursor-pointer' variant='default'>
                   Sign In
@@ -50,7 +50,7 @@ export default function RootLayout({
             </SignedOut>
             <SignedIn>
               <UserButton />
-            </SignedIn>
+            </SignedIn> */}
           </header>
           {children}
         </body>
