@@ -42,37 +42,15 @@ const CalendarSection = () => {
         <div className='mx-auto max-w-4xl py-12'>
           <Tabs defaultValue='appointment' className='w-full'>
             <TabsList className='grid w-full grid-cols-2'>
-              <TabsTrigger value='appointment'>New Appointment</TabsTrigger>
-              <TabsTrigger value='virtual'>Virtual Consultation</TabsTrigger>
+              <TabsTrigger value='appointment'>Rezervujte si zadanku</TabsTrigger>
+              <TabsTrigger value='virtual'>Terminy bez registrace</TabsTrigger>
             </TabsList>
             <TabsContent value='appointment'>
               <Card>
-                <CardHeader>
-                  <CardTitle>Book an In-Person Appointment</CardTitle>
-                  <CardDescription>
-                    Select a date, time, and specialist for your visit.
-                  </CardDescription>
-                </CardHeader>
                 <CardContent className='space-y-4'>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div className='space-y-2'>
-                      <Label htmlFor='department'>Department</Label>
-                      <Select>
-                        <SelectTrigger id='department'>
-                          <SelectValue placeholder='Select department' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='cardiology'>Cardiology</SelectItem>
-                          <SelectItem value='neurology'>Neurology</SelectItem>
-                          <SelectItem value='pediatrics'>Pediatrics</SelectItem>
-                          <SelectItem value='orthopedics'>Orthopedics</SelectItem>
-                          <SelectItem value='oncology'>Oncology</SelectItem>
-                          <SelectItem value='internal'>Internal Medicine</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='doctor'>Doctor</Label>
+                      <Label htmlFor='doctor'>Doktor</Label>
                       <Select>
                         <SelectTrigger id='doctor'>
                           <SelectValue placeholder='Select doctor' />
@@ -88,7 +66,7 @@ const CalendarSection = () => {
                       </Select>
                     </div>
                     <div className='space-y-2 md:col-span-2'>
-                      <Label>Select Date</Label>
+                      <Label>Vyberte datum</Label>
                       <div className='border rounded-md p-4'>
                         <AppointmentCalendar />
                       </div>
@@ -97,18 +75,12 @@ const CalendarSection = () => {
                       <Label htmlFor='name'>Full Name</Label>
                       <Input id='name' placeholder='Enter your full name' />
                     </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='email'>Email</Label>
-                      <Input id='email' type='email' placeholder='Enter your email' />
-                    </div>
+
                     <div className='space-y-2'>
                       <Label htmlFor='phone'>Phone Number</Label>
                       <Input id='phone' placeholder='Enter your phone number' />
                     </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='insurance'>Insurance Provider</Label>
-                      <Input id='insurance' placeholder='Enter your insurance provider' />
-                    </div>
+
                     <div className='space-y-2 md:col-span-2'>
                       <Label htmlFor='reason'>Reason for Visit</Label>
                       <Textarea
@@ -125,34 +97,12 @@ const CalendarSection = () => {
             </TabsContent>
             <TabsContent value='virtual'>
               <Card>
-                <CardHeader>
-                  <CardTitle>Book a Virtual Consultation</CardTitle>
-                  <CardDescription>
-                    Speak with a doctor from the comfort of your home.
-                  </CardDescription>
-                </CardHeader>
                 <CardContent className='space-y-4'>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div className='space-y-2'>
-                      <Label htmlFor='v-department'>Department</Label>
+                      <Label htmlFor='doctor'>Doktor</Label>
                       <Select>
-                        <SelectTrigger id='v-department'>
-                          <SelectValue placeholder='Select department' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='cardiology'>Cardiology</SelectItem>
-                          <SelectItem value='neurology'>Neurology</SelectItem>
-                          <SelectItem value='pediatrics'>Pediatrics</SelectItem>
-                          <SelectItem value='orthopedics'>Orthopedics</SelectItem>
-                          <SelectItem value='oncology'>Oncology</SelectItem>
-                          <SelectItem value='internal'>Internal Medicine</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='v-doctor'>Doctor</Label>
-                      <Select>
-                        <SelectTrigger id='v-doctor'>
+                        <SelectTrigger id='doctor'>
                           <SelectValue placeholder='Select doctor' />
                         </SelectTrigger>
                         <SelectContent>
@@ -166,39 +116,13 @@ const CalendarSection = () => {
                       </Select>
                     </div>
                     <div className='space-y-2 md:col-span-2'>
-                      <Label>Select Date</Label>
+                      <Label>Vyberte datum</Label>
                       <div className='border rounded-md p-4'>
                         <AppointmentCalendar />
                       </div>
                     </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='v-name'>Full Name</Label>
-                      <Input id='v-name' placeholder='Enter your full name' />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='v-email'>Email</Label>
-                      <Input id='v-email' type='email' placeholder='Enter your email' />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='v-phone'>Phone Number</Label>
-                      <Input id='v-phone' placeholder='Enter your phone number' />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='v-insurance'>Insurance Provider</Label>
-                      <Input id='v-insurance' placeholder='Enter your insurance provider' />
-                    </div>
-                    <div className='space-y-2 md:col-span-2'>
-                      <Label htmlFor='v-reason'>Reason for Consultation</Label>
-                      <Textarea
-                        id='v-reason'
-                        placeholder='Briefly describe your symptoms or reason for consultation'
-                      />
-                    </div>
                   </div>
                 </CardContent>
-                <CardFooter>
-                  <Button className='w-full'>Book Virtual Consultation</Button>
-                </CardFooter>
               </Card>
             </TabsContent>
           </Tabs>
