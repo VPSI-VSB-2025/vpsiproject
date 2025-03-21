@@ -39,6 +39,25 @@
 
 ## 🛠 Back-end Stack
 
+### **1️⃣ Základní technologie**
+- **[Python](https://www.python.org/)** – Jazyk pro backend  
+- **[FastAPI](https://fastapi.tiangolo.com/)** – Framework pro tvorbu REST API  
+- **[Uvicorn](https://www.uvicorn.org/)** – ASGI server pro běh FastAPI aplikace
+
+### **2️⃣ Databáze & ORM**
+- **[PostgreSQL](https://www.postgresql.org/)** – Relační databáze  
+- **[SQLAlchemy](https://www.sqlalchemy.org/)** – ORM pro práci s databází  
+- **[Alembic](https://alembic.sqlalchemy.org/)** – Migrace databáze
+
+### **3️⃣ Validace & Serializace**
+- **[Pydantic](https://docs.pydantic.dev/)** – Validace vstupních dat a datové modely
+
+### **4️⃣ Testování**
+- **[Pytest](https://docs.pytest.org/en/stable/)** – Testovací nástroj pro backend
+
+### **5️⃣ Nasazení**
+- **[Fly.io](https://fly.io/)** – Nasazení aplikace do cloudu
+
 ## 🛠 DB Stack
 
 - **[postgres](https://www.postgresql.org/)** – je to free
