@@ -6,9 +6,12 @@ import { Button } from "../ui/button"
 import React from "react"
 import useNavbarStore from "@/store/navbarStore"
 
-const Navbar = () => {
+interface NavbarProps {
+  links: { name: string; href: string }[]
+}
+const Navbar: React.FC<NavbarProps> = ({ links }) => {
   return (
-    <header className='fixed top-16 left-1/2 z-[999] bg-background/97 w-[80%] mx-auto rounded-lg px-8 -translate-x-1/2 -translate-y-1/2'>
+    <header className='fixed top-12 left-1/2 z-[999] bg-background/97 w-[80%] mx-auto rounded-lg px-8 -translate-x-1/2 -translate-y-1/2'>
       <div className='container flex h-16 items-center justify-between mx-auto'>
         <div className='flex items-center gap-2'>
           <Heart className='h-6 w-6 text-primary' />
@@ -18,33 +21,27 @@ const Navbar = () => {
         <MobileMenu />
 
         <nav className='hidden lg:flex items-center gap-6'>
-          <Link href='#home' className='text-sm font-medium hover:text-primary'>
-            Home
-          </Link>
-          <Link href='#services' className='text-sm font-medium hover:text-primary'>
-            Services
-          </Link>
-          <Link href='#doctors' className='text-sm font-medium hover:text-primary'>
-            Doctors
-          </Link>
-          <Link href='#appointments' className='text-sm font-medium hover:text-primary'>
-            Appointments
-          </Link>
-          <Link href='#contact' className='text-sm font-medium hover:text-primary'>
-            Contact
-          </Link>
+          {links.map((link) => (
+            <Link
+              href={link.href}
+              key={link.name}
+              className='text-sm font-medium hover:text-primary'
+            >
+              {link.name}
+            </Link>
+          ))}
         </nav>
 
         <div className='hidden lg:flex items-center gap-4'>
           <SignedOut>
             <SignInButton>
               <Button className='cursor-pointer' variant='default'>
-                Sign In
+                Přihlásit
               </Button>
             </SignInButton>
             <SignUpButton>
-              <Button className='cursor-pointer' variant='default'>
-                Sign Up
+              <Button className='cursor-pointer bg-transparent border-2 border-primary text-slate-700'>
+                Registrace
               </Button>
             </SignUpButton>
           </SignedOut>
@@ -62,6 +59,8 @@ const MobileMenu = () => {
     isOpen: boolean
     toggleNavbar: () => void
   }
+
+  console.log(isOpen)
 
   return (
     <div className='lg:hidden'>
