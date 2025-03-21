@@ -1,6 +1,7 @@
 import { Clock, Users } from "lucide-react"
 import { Button } from "../ui/button"
 import ContainerSection from "./container-section"
+import Image from "next/image"
 
 const HeroSection = () => {
   return (
@@ -37,13 +38,13 @@ const HeroSection = () => {
           </div>
         </div>
         <div className='flex items-center justify-center relative'>
-          <img
+          <Image
             src='https://png.pngtree.com/png-vector/20230214/ourmid/pngtree-stethoscope-with-diagnosis-medical-report-cartoon-clipart-on-transparent-background-png-image_6594830.png'
-            // width={450}
-            // height={550}
+            width={100}
+            height={20}
             alt='Hospital building'
             className='rounded-lg object-cover shadow-xl 
-              lg:w-full md:w-64 w-48'
+              lg:w-4/5 md:w-72 w-52'
           />
         </div>
       </div>
