@@ -1,8 +1,6 @@
-import Navbar from "@/components/custom/navbar-section"
 import CalendarSection from "@/components/custom/calendar-section"
 import HeroSection from "@/components/custom/hero-section"
 import ServiceSection from "@/components/custom/service-section"
-import FooterSection from "@/components/custom/footer-section"
 
 export default function HospitalLandingPage() {
   return (
