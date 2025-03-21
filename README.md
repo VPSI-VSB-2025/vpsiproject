@@ -56,7 +56,6 @@
 - **[Pytest](https://docs.pytest.org/en/stable/)** – Testovací nástroj pro backend
 
 ### **5️⃣ Nasazení**
-- **[Docker](https://www.docker.com/)** – Kontejnerizace aplikace  
 - **[Fly.io](https://fly.io/)** – Nasazení aplikace do cloudu
 
 ## 🛠 DB Stack
