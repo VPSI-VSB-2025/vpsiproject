@@ -182,7 +182,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 ```bash
 # Spuštění vývojového serveru
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
 ```
 
 Po spuštění bude aplikace dostupná na adrese http://localhost:8000.
