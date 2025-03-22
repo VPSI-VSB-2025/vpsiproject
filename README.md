@@ -146,6 +146,86 @@ frontend/
 └── tsconfig.json        # TypeScript konfigurace
 ```
 
+## Back-end - Ovládání, spuštění na lokálu
+
+### Předpoklady:
+- Nainstalovaný Python (verze 3.9 nebo vyšší)
+- Nainstalovaný Pip pro instalaci závislostí
+- Nainstalovaný Git pro správu verzí
+- Nainstalovaný PostgreSQL pro databázi
+
+## Instalace závislostí:
+```bash
+# Přejděte do složky backend
+cd backend
+
+# Instalace všech závislostí
+pip install -r requirements.txt
+```
+
+## Konfigurace prostředí (.env soubor)
+
+Ve složce backend vytvořte soubor .env s následujícími proměnnými:
+
+```bash
+# URL pro připojení k PostgreSQL
+DATABASE_URL=postgresql://username:password@localhost/dbname
+
+# Tajný klíč pro JWT
+SECRET_KEY=your-secret-key
+
+# Délka platnosti tokenu v minutách
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+## Spuštění vývojového serveru:
+
+```bash
+# Spuštění vývojového serveru
+python -m uvicorn main:app --reload
+```
+
+Po spuštění bude aplikace dostupná na adrese http://localhost:8000.
+
+### Struktura složek:
+
+```
+backend/
+├── app/
+│   ├── api/             # API routes (endpoints)
+│   │   ├── patients.py
+│   │   ├── doctors.py
+│   │   ├── medical_records.py
+│   │   ├── ...
+│   ├── core/            # Config (databáze, nastavení)
+│   │   ├── config.py
+│   │   ├── database.py
+│   ├── models/          # SQLAlchemy modely
+│   │   ├── patient.py
+│   │   ├── doctor.py
+│   │   ├── medical_record.py
+│   │   ├── ...
+│   ├── schemas/         # Pydantic schémata (validace)
+│   │   ├── patient.py
+│   │   ├── doctor.py
+│   │   ├── medical_record.py
+│   │   ├── ...
+│   ├── services/        # Business logika (např. CRUD operace)
+│   │   ├── patient_service.py
+│   │   ├── doctor_service.py
+│   │   ├── medical_record_service.py
+│   │   ├── ...
+│   ├── main.py          # Hlavní FastAPI aplikace a spuštění
+├── alembic/             # Migrace databáze
+├── tests/               # Pytest testové soubory
+│   ├── test_patients.py
+│   ├── test_doctors.py
+│   ├── test_medical_records.py
+│   ├── ...
+├── .env                 # Proměnné prostředí
+├── requirements.txt     # Závislosti
+```
+
 ## Doporučené vývojové nástroje
 
 - **Visual Studio Code** s těmito rozšířeními:
