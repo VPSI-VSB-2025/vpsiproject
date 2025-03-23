@@ -1,6 +1,11 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import date
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.medical_record import MedicalRecord
+    from app.models.prescription import Prescription
+    from app.models.request import Request
 
 class Patient(SQLModel, table=True):
     __tablename__ = 'patient'

@@ -1,9 +1,14 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional
 from datetime import datetime, timezone
 
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.patient import Patient
+    from app.models.doctor import Doctor
+    from app.models.prescription_medicine import Medicine
+
 
 class Prescription(SQLModel, table=True):
     __tablename__ = 'prescription'
@@ -14,10 +19,10 @@ class Prescription(SQLModel, table=True):
     date_to: Optional[datetime]
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
-    #patient_id: int = Field(foreign_key="patient.id")
+    patient_id: int = Field(foreign_key="patient.id")
     doctor_id: int = Field(foreign_key="doctor.id")
     medicine_id: int = Field(foreign_key="medicine.id")
 
-    #patient: "Patient" = Relationship(back_populates="prescriptions")
+    patient: "Patient" = Relationship(back_populates="prescriptions")
     doctor: "Doctor" = Relationship(back_populates="prescriptions")
     medicine: List["Medicine"] = Relationship(back_populates="prescriptions")

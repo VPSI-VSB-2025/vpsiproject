@@ -1,6 +1,10 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.request import Request
+    from app.models.doctor import Doctor
 
 class Calendar(SQLModel, table=True):
     __tablename__ = 'calendar'
@@ -12,8 +16,7 @@ class Calendar(SQLModel, table=True):
     state: str = Field(max_length=50, default="pending")
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
-    request_id: Optional[int] = Field(default=None, foreign_key="request.id")
     doctor_id: Optional[int] = Field(default=None, foreign_key="doctor.id")
 
     doctor: "Doctor" = Relationship(back_populates="calendar")
-    equest: "Request" = Relationship(back_populates="calendar_event")
+    requests: list["Request"] = Relationship(back_populates="calendar_event")

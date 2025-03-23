@@ -5,9 +5,10 @@ from typing import Optional
 class PrescriptionBase(BaseModel):
     dosage: str
     date_from: Optional[datetime] = None
-    date_to: Optional[datetime] =  None
+    date_to: Optional[datetime] = None
     created_at: datetime
-    
+
+
 class PrescriptionCreate(PrescriptionBase):
     pass
 

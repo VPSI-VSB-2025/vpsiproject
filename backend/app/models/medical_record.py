@@ -1,6 +1,10 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional
 from datetime import datetime, timezone
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.patient import Patient
+    from app.models.doctor import Doctor
 
 class MedicalRecord(SQLModel, table=True):
     __tablename__ = 'medical_record'
