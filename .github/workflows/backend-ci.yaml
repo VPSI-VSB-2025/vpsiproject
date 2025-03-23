@@ -59,7 +59,7 @@ jobs:
       - name: Lint
         run: |
           pip install flake8
-          flake8 .
+          flake8 . --config=.flake8
 
   cd:
     needs: ci # Zajistí, že deploy běží až po dokončení CI pipeline
