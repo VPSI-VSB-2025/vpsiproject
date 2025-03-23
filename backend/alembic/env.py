@@ -14,7 +14,7 @@ from app.models.prescription import Prescription
 from app.models.relation import FamilyRelation
 from app.models.request_type import RequestType
 from app.models.request import Request
-from app.models.test_type import TestType
+from app.models.test_type import MedicalTestType
 from app.models.test import Test
 
 # Import to load environment variables
