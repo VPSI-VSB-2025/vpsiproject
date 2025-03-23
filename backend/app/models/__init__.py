@@ -9,6 +9,5 @@ from .nurse import Nurse
 from .prescription import Prescription
 from .relation import FamilyRelation
 from .request_type import RequestType
-from .request  import Request
 from .test import Test
 from .prescription_medicine import Medicine

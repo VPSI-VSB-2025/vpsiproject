@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from app.models import * 
+from app.models import *
 from app.core.config import settings
 import os
 

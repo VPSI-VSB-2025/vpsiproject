@@ -16,7 +16,7 @@ class Doctor(SQLModel, table=True):
     surname: str = Field(max_length=255)
     email: Optional[str] = Field(default=None, max_length=255)
     phone_number: Optional[str] = Field(default=None, max_length=20)
-    specialization: int 
+    specialization: int
 
     medical_records: List["MedicalRecord"] = Relationship(back_populates="doctor")
     requests: List["Request"] = Relationship(back_populates="doctor")

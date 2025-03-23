@@ -8,8 +8,8 @@ from app.api.medical_records import router as medical_records_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Starting up...")
-    create_tables() 
-    yield  
+    create_tables()
+    yield
     print("Shutting down...")
 
 app = FastAPI(lifespan=lifespan)
@@ -24,4 +24,3 @@ create_tables()
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
-

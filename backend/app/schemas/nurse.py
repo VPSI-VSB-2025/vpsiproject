@@ -6,7 +6,7 @@ class NurseBase(BaseModel):
     surname: str
     email: Optional[str] = None
     phone_number: Optional[str] = None
-    
+
 class NurseCreate(NurseBase):
     pass
 

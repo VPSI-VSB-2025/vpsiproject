@@ -24,4 +24,3 @@ class Prescription(SQLModel, table=True):
     patient: "Patient" = Relationship(back_populates="prescriptions")
     doctor: "Doctor" = Relationship(back_populates="prescriptions")
     medicine: List["Medicine"] = Relationship(back_populates="prescriptions")
-    

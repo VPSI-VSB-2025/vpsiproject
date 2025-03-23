@@ -13,5 +13,3 @@ class PrescriptionMedicineOut(PrescriptionMedicineBase):
 
     class Config:
         orm_mode = True
-
-        

@@ -2,6 +2,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from sqlmodel import SQLModel
 
 from app.models.calendar import Calendar
 from app.models.doctor_specialization import DoctorSpecialization
@@ -42,7 +43,6 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from sqlmodel import SQLModel
 target_metadata = SQLModel.metadata
 
 # other values from the config, defined by the needs of env.py,

@@ -14,5 +14,5 @@ class FamilyRelation(SQLModel, table=True):
     #  __table_args__ = (
     ##      PrimaryKeyConstraint('patient_id', 'related_id'),
     # )
-    
+
     #  patient: "Patient" = Relationship(back_populates="family_relations")
