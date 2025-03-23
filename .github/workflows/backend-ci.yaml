@@ -50,7 +50,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-            - name: Run Tests
+      - name: Run Tests
         run: |
           pytest
         env:
