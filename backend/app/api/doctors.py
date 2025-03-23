@@ -17,7 +17,6 @@ def get_db():
 def create_doctor(doctor: DoctorCreate, db: Session = Depends(get_db)):
     return DoctorService.create_doctor(db, doctor)
 
-
 @router.get("/{doctor_id}", response_model=DoctorOut)
 def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
     db_doctor = DoctorService.get_doctor(db=db, doctor_id=doctor_id)
