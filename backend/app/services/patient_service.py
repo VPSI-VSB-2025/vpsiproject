@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Patient  
-from schemas import PatientCreate
+from app.models.patient import Patient  
+from app.schemas.patient import PatientCreate
 
 class PatientService:
     @staticmethod

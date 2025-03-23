@@ -1,5 +1,8 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.test import Test
 
 class TestType(SQLModel, table=True):
     __tablename__ = 'test_type'

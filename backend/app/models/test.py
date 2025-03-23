@@ -1,5 +1,10 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.test_type import TestType
+    from app.models.request import Request
 
 class Test(SQLModel, table=True):
     id: int | None = Field(primary_key=True)
@@ -13,5 +18,3 @@ class Test(SQLModel, table=True):
 
     test_type: "TestType" = Relationship(back_populates="tests")
     request: "Request" = Relationship(back_populates="tests")
-
-    

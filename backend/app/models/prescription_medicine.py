@@ -1,5 +1,8 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.prescription import Prescription
 
 class Medicine(SQLModel, table=True):
     __tablename__ = 'medicine'
