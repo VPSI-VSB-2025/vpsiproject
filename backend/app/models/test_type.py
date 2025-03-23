@@ -4,7 +4,7 @@ from typing import Optional, List, TYPE_CHECKING
 if TYPE_CHECKING:
     from app.models.test import Test
 
-class TestType(SQLModel, table=True):
+class MedicalTestType(SQLModel, table=True):
     __tablename__ = 'test_type'
 
     id: Optional[int] = Field(default=None, primary_key=True)

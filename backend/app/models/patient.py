@@ -12,7 +12,7 @@ class Patient(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     date_of_birth: date
-    sex: str = Field(max_length=1)
+    sex: str = Field(max_length=1, description="Single character: 'M' for male, 'F' for female, 'O' for other")
     address: str = Field(max_length=255)
     phone_number: Optional[str] = Field(default=None, max_length=20)
     personal_number: str = Field(min_length=10, max_length=10)
@@ -21,4 +21,3 @@ class Patient(SQLModel, table=True):
     prescriptions: List["Prescription"] = Relationship(back_populates="patient")
    # relations = List["FamilyRelation"] = Relationship(back_populates="patient")
     requests: List["Request"] = Relationship(back_populates="patient")
-    

@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.models.test_type import TestType
+    from app.models.test_type import MedicalTestType
     from app.models.request import Request
 
 class Test(SQLModel, table=True):
@@ -16,5 +16,5 @@ class Test(SQLModel, table=True):
     test_type_id: int = Field(foreign_key="test_type.id")
     request_id: int = Field(foreign_key="request.id")
 
-    test_type: "TestType" = Relationship(back_populates="tests")
+    test_type: "MedicalTestType" = Relationship(back_populates="tests")
     request: "Request" = Relationship(back_populates="tests")
