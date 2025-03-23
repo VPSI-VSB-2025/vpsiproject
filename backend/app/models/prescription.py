@@ -1,8 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
-from datetime import datetime, timezone
-
-from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List, TYPE_CHECKING
+from datetime import datetime, timezone
 
 if TYPE_CHECKING:
     from app.models.patient import Patient
@@ -26,3 +24,4 @@ class Prescription(SQLModel, table=True):
     patient: "Patient" = Relationship(back_populates="prescriptions")
     doctor: "Doctor" = Relationship(back_populates="prescriptions")
     medicine: List["Medicine"] = Relationship(back_populates="prescriptions")
+    

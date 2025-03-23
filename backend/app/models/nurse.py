@@ -3,7 +3,7 @@ from typing import List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.doctor import Doctor
-    from app.models.request import Request 
+    from app.models.request import Request
 
 class Nurse(SQLModel, table=True):
     __tablename__ = 'nurse'

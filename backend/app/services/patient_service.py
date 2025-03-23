@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
-from app.models.patient import Patient  
+from app.models.patient import Patient
 from app.schemas.patient import PatientCreate
 
 class PatientService:
     @staticmethod
     def create_patient(db: Session, patient: PatientCreate):
-        db_patient = Patient(**patient.dict())  
+        db_patient = Patient(**patient.dict())
         db.add(db_patient)
         db.commit()
-        db.refresh(db_patient) 
+        db.refresh(db_patient)
         return db_patient
 
     @staticmethod

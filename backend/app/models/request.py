@@ -28,4 +28,4 @@ class Request(SQLModel, table=True):
     nurse: "Nurse" = Relationship(back_populates="requests")
     request_type: "RequestType" = Relationship(back_populates="requests")
     calendar_event: "Calendar" = Relationship(back_populates="requests")
-    tests: List["Test"] = Relationship(back_populates="request") 
+    tests: List["Test"] = Relationship(back_populates="request")
