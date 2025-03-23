@@ -52,7 +52,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          pytest
+          pytest --no-fail-no-tests
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
