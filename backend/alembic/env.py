@@ -1,8 +1,6 @@
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
 from alembic import context
 
 from app.models.calendar import Calendar
@@ -19,10 +17,23 @@ from app.models.request import Request
 from app.models.test_type import TestType
 from app.models.test import Test
 
+# Import to load environment variables
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+# Load environment variables from .env file
+dotenv_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path=dotenv_path)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# Override sqlalchemy.url with DATABASE_URL from .env
+db_url = os.getenv("DATABASE_URL")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -31,9 +42,6 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-
 from sqlmodel import SQLModel
 target_metadata = SQLModel.metadata
 
@@ -74,10 +82,19 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    # Add SSL arguments for PostgreSQL
+    connect_args = {}
+    url = config.get_main_option("sqlalchemy.url")
+    if url.startswith("postgresql"):
+        connect_args = {"sslmode": "require"}
+
+    configuration = config.get_section(config.config_ini_section)
+    configuration["sqlalchemy.url"] = url
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=connect_args
     )
 
     with connectable.connect() as connection:
