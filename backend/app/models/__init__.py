@@ -1,4 +1,4 @@
-from .test_type import TestType
+from .test_type import MedicalTestType
 from .patient import Patient
 from .calendar import Calendar
 from .doctor import Doctor
