@@ -48,13 +48,13 @@ jobs:
         run: |
           alembic upgrade head
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Run Tests
+            - name: Run Tests
         run: |
           pytest
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Lint
         run: |
