@@ -40,22 +40,27 @@
 ## 🛠 Back-end Stack
 
 ### **1️⃣ Základní technologie**
-- **[Python](https://www.python.org/)** – Jazyk pro backend  
-- **[FastAPI](https://fastapi.tiangolo.com/)** – Framework pro tvorbu REST API  
+
+- **[Python](https://www.python.org/)** – Jazyk pro backend
+- **[FastAPI](https://fastapi.tiangolo.com/)** – Framework pro tvorbu REST API
 - **[Uvicorn](https://www.uvicorn.org/)** – ASGI server pro běh FastAPI aplikace
 
 ### **2️⃣ Databáze & ORM**
-- **[PostgreSQL](https://www.postgresql.org/)** – Relační databáze  
-- **[SQLAlchemy](https://www.sqlalchemy.org/)** – ORM pro práci s databází  
+
+- **[PostgreSQL](https://www.postgresql.org/)** – Relační databáze
+- **[SQLAlchemy](https://www.sqlalchemy.org/)** – ORM pro práci s databází
 - **[Alembic](https://alembic.sqlalchemy.org/)** – Migrace databáze
 
 ### **3️⃣ Validace & Serializace**
+
 - **[Pydantic](https://docs.pydantic.dev/)** – Validace vstupních dat a datové modely
 
 ### **4️⃣ Testování**
+
 - **[Pytest](https://docs.pytest.org/en/stable/)** – Testovací nástroj pro backend
 
 ### **5️⃣ Nasazení**
+
 - **[Fly.io](https://fly.io/)** – Nasazení aplikace do cloudu
 
 ## 🛠 DB Stack
@@ -149,12 +154,14 @@ frontend/
 ## Back-end - Ovládání, spuštění na lokálu
 
 ### Předpoklady:
+
 - Nainstalovaný Python (verze 3.9 nebo vyšší)
 - Nainstalovaný Pip pro instalaci závislostí
 - Nainstalovaný Git pro správu verzí
 - Nainstalovaný PostgreSQL pro databázi
 
 ## Instalace závislostí:
+
 ```bash
 # Přejděte do složky backend
 cd backend
@@ -237,11 +244,18 @@ backend/
 ## Užitečné příkazy
 
 ```bash
-# Kontrola kódu pomocí lintera
+# Kontrola frontend kódu pomocí lintera
 pnpm lint
 ```
 
+```bash
+# Kontrola backend kódu pomocí lintera
+flake8 . --config=.flake8
+```
+
 - O Enviroment variables do souboru `/frontend/.env`, požádejte front-end engineera.
+
+- O Enviroment variables do souboru `/frontend/.env`, požádejte back-end engineera.
 
 ## CI/CD Pipeline pro Frontend
 
@@ -269,14 +283,32 @@ Nasazení frontendové aplikace je automatizováno pomocí **GitHub Actions** a 
 
 Nasazení se spouští automaticky po úspěšném dokončení CI pipeline a pouze při změnách ve složce `frontend/` na `main` větvi.
 
-Pro správné fungování deployment pipeline jsou vyžadovány následující secrets v GitHub Actions:
-
-- `NETLIFY_AUTH_TOKEN`
-- `NETLIFY_SITE_ID`
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-- `CLERK_SECRET_KEY`
-
 Tímto způsobem zajišťujeme, že kód je vždy správně ověřen a automaticky nasazen do produkčního prostředí. ✅
+
+## CI/CD Pipeline pro Backend
+
+Naše CI/CD pipeline pro backend využívá **GitHub Actions** a zajišťuje automatickou kontrolu kódu, testování a nasazení do produkčního prostředí. Pipeline obsahuje následující kroky:
+
+### 🛠 **CI (Continuous Integration)**
+
+1. **Checkout kódu** – Načte aktuální verzi repozitáře.
+2. **Setup Python** – Nastaví Python 3.10 s cache pro pip balíčky.
+3. **Instalace závislostí** – Nainstaluje všechny potřebné Python balíčky z requirements.txt.
+4. **Migrace databáze** – Spustí Alembic migrace pro přípravu testovací databáze.
+5. **Spuštění testů** – Provede automatické testy pomocí Pytest.
+6. **Lint** – Spouští Flake8 pro kontrolu kvality kódu a dodržování standardů.
+
+CI se spouští pouze na **Pull Requesty a commity do `main` branche** a běží pouze pro změny ve složce `backend/`, což šetří čas i GitHub Actions minuty. Pro testování je použita PostgreSQL databáze, která běží jako služba v rámci workflow.
+
+### 🚀 **CD (Continuous Deployment)**
+
+Po úspěšném dokončení CI pipeline probíhá automatické nasazení:
+
+1. **CD krok**: Spustí se pouze po úspěšném CI a pouze pro `main` větev:
+   - Využívá deploy hook URL k aktivaci automatického nasazení na platformě Render
+   - Curl příkazem se volá deploy hook poskytnutý službou Render
+
+Tato automatizace zajišťuje, že kód v produkčním prostředí je vždy otestovaný, splňuje standardy a je nasazený ihned po úspěšném dokončení všech kontrol. ✅
 
 ## ❗ Workflow pro přispěvatele ❗
 
