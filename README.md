@@ -65,7 +65,7 @@
 
 ## 🛠 DB Stack
 
-- **[postgres](https://www.postgresql.org/)** – je to free
+- **[PostgreSQL](https://www.postgresql.org/)** – je to free
 
 ## Front-end - ovládání, spuštění na lokálu
 
@@ -102,6 +102,8 @@ NEXT_PUBLIC_APP_ENV=development
 ```
 
 ### Spuštění vývojového serveru:
+
+(ve složce frontend:)
 
 ```bash
 # Spuštění vývojového serveru
@@ -155,10 +157,9 @@ frontend/
 
 ### Předpoklady:
 
-- Nainstalovaný Python (verze 3.9 nebo vyšší)
-- Nainstalovaný Pip pro instalaci závislostí
-- Nainstalovaný Git pro správu verzí
-- Nainstalovaný PostgreSQL pro databázi
+- Nainstalovaný **[Python](https://www.python.org/)** (verze 3.9 nebo vyšší)
+- Nainstalovaný **[Pip](https://pypi.org/project/pip/)** pro instalaci závislostí
+- Nainstalovaný **[Git](https://git-scm.com/downloads)** pro správu verzí
 
 ## Instalace závislostí:
 
@@ -176,7 +177,7 @@ Ve složce backend vytvořte soubor .env s následujícími proměnnými:
 
 ```bash
 # URL pro připojení k PostgreSQL
-DATABASE_URL=postgresql://username:password@localhost/dbname
+DATABASE_URL=neon_db_url_je_na_messengeru
 
 # Tajný klíč pro JWT
 SECRET_KEY=your-secret-key
@@ -187,12 +188,15 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 ## Spuštění vývojového serveru:
 
+(ve složce backend:)
+
 ```bash
 # Spuštění vývojového serveru (z /backend/)
 python -m uvicorn app.main:app --reload
 ```
 
 Po spuštění bude aplikace dostupná na adrese http://localhost:8000.
+
 CRUD operace lze testovat na http://localhost:8000/docs/
 
 ### Struktura složek:
@@ -240,6 +244,7 @@ backend/
   - ESLint
   - Prettier
   - Tailwind CSS IntelliSense
+  - Python
 
 ## Užitečné příkazy
 
