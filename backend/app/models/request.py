@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from app.models.request_type import RequestType
     from app.models.calendar import Calendar
     from app.models.nurse import Nurse
-    from app.models.test import Test 
+    from app.models.test import Test
 
 class Request(SQLModel, table=True):
     __tablename__ = 'request'
