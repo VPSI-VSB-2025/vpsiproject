@@ -3,3 +3,4 @@ node_modules
 .env
 .clerk
 *.DS_Store
+__pycache__/
