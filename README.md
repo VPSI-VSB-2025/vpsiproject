@@ -61,7 +61,7 @@
 
 ### **5️⃣ Nasazení**
 
-- **[Fly.io](https://fly.io/)** – Nasazení aplikace do cloudu
+- **[Render](https://render.com/)** – Nasazení aplikace do cloudu
 
 ## 🛠 DB Stack
 
