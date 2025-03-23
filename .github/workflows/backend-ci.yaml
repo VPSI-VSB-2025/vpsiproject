@@ -1,0 +1,76 @@
+name: Backend CI/CD
+on:
+  push:
+    branches:
+      - main # Spustí se pouze při push do main
+    paths:
+      - "backend/**" # Spustí se pouze pokud se mění něco v backend složce
+  pull_request:
+    branches:
+      - main # Spustí se na Pull Request směřující do main
+    paths:
+      - "backend/**" # Spustí se pouze pokud se mění něco v backend složce
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend # Nastaví výchozí adresář na ./backend
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Migrations
+        run: |
+          alembic upgrade head
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+
+      - name: Run Tests
+        run: |
+          pytest
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+
+      - name: Lint
+        run: |
+          pip install flake8
+          flake8 .
+
+  cd:
+    needs: ci # Zajistí, že deploy běží až po dokončení CI pipeline
+    if: github.ref == 'refs/heads/main' # Zajistí, že deploy běží pouze pro main branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
