@@ -34,13 +34,13 @@ const FooterSection: React.FC<Footerprops> = ({ links }) => {
         </p>
         <div className='flex items-center gap-4'>
           <Link href='#' className='text-xs text-muted-foreground hover:text-foreground'>
-            Privacy Policy
+            Zásady ochrany osobních údajů
           </Link>
           <Link href='#' className='text-xs text-muted-foreground hover:text-foreground'>
-            Terms of Service
+            Podmínky služby
           </Link>
           <Link href='#' className='text-xs text-muted-foreground hover:text-foreground'>
-            Accessibility
+            Přístupnost
           </Link>
         </div>
       </div>

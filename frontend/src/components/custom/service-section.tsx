@@ -20,33 +20,33 @@ const ServiceSection = () => {
       <div className='mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-12'>
         <ServiceCard
           icon={<Heart className='h-6 w-6 text-primary' />}
-          title='Cardiology'
-          description='Comprehensive heart care with advanced diagnostic and treatment options.'
+          title='Kardiologie'
+          description='Komplexní péče o srdce s pokročilými možnostmi diagnostiky a léčby'
         />
         <ServiceCard
           icon={<Activity className='h-6 w-6 text-primary' />}
-          title='Emergency Care'
-          description='24/7 emergency services with rapid response and expert care.'
+          title='Tísňová péče'
+          description='Nepřetržitá pohotovostní služba s rychlou reakcí a odbornou péčí.'
         />
         <ServiceCard
           icon={<Stethoscope className='h-6 w-6 text-primary' />}
-          title='Primary Care'
-          description='Routine check-ups, preventive care, and management of chronic conditions.'
+          title='Primární péče'
+          description='Běžné prohlídky, preventivní péče a léčba chronických onemocnění.'
         />
         <ServiceCard
           icon={<Users className='h-6 w-6 text-primary' />}
-          title='Pediatrics'
-          description='Specialized care for infants, children, and adolescents.'
+          title='Pediatrie'
+          description='Specializovaná péče o kojence, děti a dospívající.'
         />
         <ServiceCard
           icon={<Laptop className='h-6 w-6 text-primary' />}
-          title='Telemedicine'
-          description='Virtual consultations with our healthcare professionals from your home.'
+          title='Telemedicína'
+          description='Virtuální konzultace s našimi zdravotníky z vašeho domova.'
         />
         <ServiceCard
           icon={<HelpCircle className='h-6 w-6 text-primary' />}
-          title='Mental Health'
-          description='Comprehensive mental health services for all ages.'
+          title='Duševní zdraví'
+          description='Komplexní služby v oblasti duševního zdraví pro všechny věkové kategorie.'
         />
       </div>
     </ContainerSection>

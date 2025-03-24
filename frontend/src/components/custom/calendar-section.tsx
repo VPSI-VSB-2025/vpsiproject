@@ -28,15 +28,15 @@ const CalendarSection = () => {
             Přehled dostupných termínů
           </h2>
           <p className='max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>
-            nejaky text....
+            Zde si můžete vybrat z nabízených volných termínů pro jednotlivé oddělení a lékaře.
           </p>
         </div>
       </div>
       <div className='mx-auto max-w-4xl py-12'>
         <Tabs defaultValue='appointment' className='w-full'>
           <TabsList className='grid w-full grid-cols-2'>
-            <TabsTrigger value='appointment'>Rezervujte si zadanku</TabsTrigger>
-            <TabsTrigger value='virtual'>Terminy bez registrace</TabsTrigger>
+            <TabsTrigger value='appointment'>Rezervujte si žádanku</TabsTrigger>
+            <TabsTrigger value='virtual'>Termíny bez registrace</TabsTrigger>
           </TabsList>
           <TabsContent value='appointment'>
             <Card>
@@ -46,7 +46,7 @@ const CalendarSection = () => {
                     <Label htmlFor='doctor'>Doktor</Label>
                     <Select>
                       <SelectTrigger id='doctor'>
-                        <SelectValue placeholder='Select doctor' />
+                        <SelectValue placeholder='Zvolte lékaře' />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value='dr-johnson'>Dr. Sarah Johnson</SelectItem>
@@ -65,26 +65,26 @@ const CalendarSection = () => {
                     </div>
                   </div>
                   <div className='space-y-2'>
-                    <Label htmlFor='name'>Full Name</Label>
-                    <Input id='name' placeholder='Enter your full name' />
+                    <Label htmlFor='name'>Jméno a Příjmení</Label>
+                    <Input id='name' placeholder='Zadejte Jméno a Příjmení' />
                   </div>
 
                   <div className='space-y-2'>
-                    <Label htmlFor='phone'>Phone Number</Label>
-                    <Input id='phone' placeholder='Enter your phone number' />
+                    <Label htmlFor='phone'>Telefonní číslo</Label>
+                    <Input id='phone' placeholder='Zadejte Telefonní číslo' />
                   </div>
 
                   <div className='space-y-2 md:col-span-2'>
-                    <Label htmlFor='reason'>Reason for Visit</Label>
+                    <Label htmlFor='reason'>Důvod návštěvy kliniky</Label>
                     <Textarea
                       id='reason'
-                      placeholder='Briefly describe your symptoms or reason for visit'
+                      placeholder='Stručně popište své příznaky nebo důvod návštěvy'
                     />
                   </div>
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className='w-full'>Book Appointment</Button>
+                <Button className='w-full'>Zarezervujte si termín</Button>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -134,14 +134,14 @@ function AppointmentCalendar() {
       <Calendar
         mode='single'
         selected={date}
-        onSelect={(day) => day && setDate(day)}
+        onSelect={(day: Date | undefined) => day && setDate(day)}
         className='rounded-md border'
       />
       <div className='space-y-2'>
-        <Label>Select Time</Label>
+        <Label>Vyberte čas</Label>
         <Select>
           <SelectTrigger>
-            <SelectValue placeholder='Select time' />
+            <SelectValue placeholder='Vyberte čas' />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='9:00'>9:00 AM</SelectItem>

@@ -13,15 +13,15 @@ const HeroSection = () => {
         <div className='flex flex-col justify-center space-y-4'>
           <div className='space-y-2'>
             <h1 className='text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none'>
-              Your Health Is Our Priority
+              Vaše zdraví je naší prioritou
             </h1>
-            <p className='relative w-full text-muted-foreground md:text-xl break-words'>
-              Providing exceptional healthcare services with compassion and expertise. Our team of
-              specialists is dedicated to your well-being.
+            <p className='relative w-full text-muted-foreground md:text-xl break-words mt-6'>
+              Poskytovujeme výjimečné zdravotnické služeb se soucitem a odborností. Náš tým
+              specialistů se postará o vaše problémy.
             </p>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-            <Button className='px-8'>Rezervuj si zadanku</Button>
+            <Button className='px-8'>Rezervujte si žádanku</Button>
             <Button variant='outline' className='px-8'>
               Kontaktujte nás
             </Button>
@@ -29,22 +29,21 @@ const HeroSection = () => {
           <div className='flex items-center gap-4 text-sm text-muted-foreground'>
             <div className='flex items-center gap-1'>
               <Clock className='h-4 w-4 text-primary' />
-              <span>Spickovy system </span>
+              <span>Špičkový systém</span>
             </div>
             <div className='flex items-center gap-1'>
               <Users className='h-4 w-4 text-primary' />
-              <span>Spickovi lide</span>
+              <span>Odborníci</span>
             </div>
           </div>
         </div>
         <div className='flex items-center justify-center relative'>
           <Image
-            src='https://png.pngtree.com/png-vector/20230214/ourmid/pngtree-stethoscope-with-diagnosis-medical-report-cartoon-clipart-on-transparent-background-png-image_6594830.png'
+            src='/Caduceus-Red-And-Blue.svg'
             width={100}
             height={20}
             alt='Hospital building'
-            className='rounded-lg object-cover shadow-xl 
-              lg:w-4/5 md:w-72 w-52'
+            className='rounded-lg object-cover shadow-xl lg:w-92 md:w-72 w-52 p-2'
           />
         </div>
       </div>
