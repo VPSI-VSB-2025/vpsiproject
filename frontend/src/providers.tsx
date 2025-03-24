@@ -6,10 +6,9 @@ import { ClerkProvider } from "@clerk/nextjs"
 
 interface Props {
   children?: ReactNode
-  session?: any
 }
 
-export default function Providers({ children, session }: Props) {
+export default function Providers({ children }: Props) {
   const queryClient = new QueryClient()
 
   return (
