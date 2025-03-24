@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class DoctorSpecializationBase(BaseModel):
     name: str
@@ -8,6 +8,4 @@ class DoctorSpecializationCreate(DoctorSpecializationBase):
 
 class DoctorSpecializationOut(DoctorSpecializationBase):
     id: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

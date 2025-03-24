@@ -8,3 +8,4 @@ pytest
 python-dotenv
 sqlmodel
 pydantic-settings
+fastapi-cors

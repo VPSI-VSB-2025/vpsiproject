@@ -20,7 +20,7 @@
 
 ### **4️⃣ Formuláře & Validace**
 
-- **[TanStack Form](https://tanstack.com/form)** – Knihovna pro práci s formuláři
+- **[React Hook Form](https://react-hook-form.com/)** – Knihovna pro práci s formuláři
 - **[Zod](https://zod.dev/)** – Validace dat s podporou TypeScriptu
 
 ### **5️⃣ Autentizace & Autorizace**
