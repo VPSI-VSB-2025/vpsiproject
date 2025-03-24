@@ -11,6 +11,8 @@ class Patient(SQLModel, table=True):
     __tablename__ = 'patient'
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(max_length=255)
+    surname: str = Field(max_length=255)
     date_of_birth: date
     sex: str = Field(max_length=1, description="Single character: 'M' for male, 'F' for female, 'O' for other")
     address: str = Field(max_length=255)

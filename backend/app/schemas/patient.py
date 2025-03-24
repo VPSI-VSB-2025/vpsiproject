@@ -3,6 +3,8 @@ from datetime import date
 from typing import Optional
 
 class PatientBase(BaseModel):
+    name: str
+    surname: str
     date_of_birth: date
     sex: str
     address: str
@@ -14,6 +16,8 @@ class PatientCreate(PatientBase):
 
 class PatientOut(BaseModel):
     id: int
+    name: str
+    surname: str
     date_of_birth: date
     sex: str
     address: str
