@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
-import { ClerkProvider } from "@clerk/nextjs"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/custom/navbar-section"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import Providers from "@/providers"
 import FooterSection from "@/components/custom/footer-section"
+import { Toaster } from "sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,14 +34,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
+    <Providers>
       <html lang='en' className='scroll-smooth'>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Navbar links={links} />
           {children}
           <FooterSection links={links} />
+          <Toaster richColors />
         </body>
       </html>
-    </ClerkProvider>
+    </Providers>
   )
 }

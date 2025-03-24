@@ -39,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({ links }) => {
                 Přihlásit
               </Button>
             </SignInButton>
-            <SignUpButton>
+            <SignUpButton forceRedirectUrl={"/protected/role/"}>
               <Button className='cursor-pointer bg-transparent border-2 border-primary text-slate-700'>
                 Registrace
               </Button>
@@ -59,8 +59,6 @@ const MobileMenu = () => {
     isOpen: boolean
     toggleNavbar: () => void
   }
-
-  console.log(isOpen)
 
   return (
     <div className='lg:hidden'>
