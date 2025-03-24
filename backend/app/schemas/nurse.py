@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 class NurseBase(BaseModel):
@@ -8,10 +8,10 @@ class NurseBase(BaseModel):
     phone_number: Optional[str] = None
 
 class NurseCreate(NurseBase):
-    pass
+    # Make doctor_id an optional field when creating a nurse
+    doctor_id: Optional[int] = None
 
 class NurseOut(NurseBase):
     id: int
-
-    class Config:
-        orm_mode = True
+    doctor_id: Optional[int] = None
+    model_config = ConfigDict(from_attributes=True)

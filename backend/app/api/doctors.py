@@ -29,6 +29,13 @@ def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
 def get_doctors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return DoctorService.get_doctors(db=db, skip=skip, limit=limit)
 
+@router.put("/{doctor_id}", response_model=DoctorOut)
+def update_doctor(doctor_id: int, doctor: DoctorCreate, db: Session = Depends(get_db)):
+    db_doctor = DoctorService.update_doctor(db=db, doctor_id=doctor_id, doctor=doctor)
+    if db_doctor is None:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return db_doctor
+
 @router.delete("/{doctor_id}", response_model=DoctorOut)
 def delete_doctor(doctor_id: int, db: Session = Depends(get_db)):
     db_doctor = DoctorService.delete_doctor(db=db, doctor_id=doctor_id)

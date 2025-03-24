@@ -1,19 +1,10 @@
 [flake8]
-# Ignore specific errors
 ignore = E501, E302, F401, W292, F403
-
-# Set max line length (not that it matters since we're ignoring E501)
-max-line-length = 100
-
-# Exclude common directories that shouldn't be checked
-exclude = 
-    .git,
-    __pycache__,
-    build,
-    dist,
-    .env,
-    .venv,
-    env,
-    venv,
-    ENV,
-    alembic/versions
+max-line-length = 120
+exclude = .git,__pycache__,build,dist,*.egg-info,alembic
+per-file-ignores =
+    # Allow unused imports in __init__.py files
+    __init__.py: F401
+extend-ignore =
+    # See https://github.com/PyCQA/pycodestyle/issues/373
+    E203,
