@@ -478,7 +478,7 @@ const CalendarSection = () => {
                       >
                         {(field) => (
                           <>
-                            <Label htmlFor=''>Jméno</Label>
+                            <Label htmlFor=''>Telefonní číslo</Label>
                             <Input
                               id='phone'
                               placeholder='Zadejte Telefonní číslo'
@@ -500,7 +500,7 @@ const CalendarSection = () => {
                       <form.Field name='note'>
                         {(field) => (
                           <>
-                            <Label htmlFor=''>Jméno</Label>
+                            <Label htmlFor=''>Důvod návštěvy</Label>
                             <Textarea
                               id='note'
                               placeholder='Zadejte Důvod návštěvy'
