@@ -17,25 +17,24 @@ import React, { useCallback, useEffect, useState } from "react"
 import ContainerSection from "./container-section"
 
 import { Doctor } from "@/types/doctor"
-import axios, { AxiosError } from "axios"
 
 import { Appointment } from "@/types/appointment"
 
 import { formatDateToCzech } from "@/utils/helper"
 import { useForm } from "@tanstack/react-form"
 
-const fetchDoctors = async (): Promise<Doctor[]> => {
-  return axios
-    .get("https://vpsiproject.onrender.com/doctors")
-    .then((response) => {
-      console.log("Fetched doctors:", response.data)
-      return response.data
-    })
-    .catch((error: AxiosError) => {
-      console.error("Error fetching doctors:", error)
-      return []
-    })
-}
+// const fetchDoctors = async (): Promise<Doctor[]> => {
+//   return axios
+//     .get("https://vpsiproject.onrender.com/doctors")
+//     .then((response) => {
+//       console.log("Fetched doctors:", response.data)
+//       return response.data
+//     })
+//     .catch((error: AxiosError) => {
+//       console.error("Error fetching doctors:", error)
+//       return []
+//     })
+// }
 
 const doctors: Doctor[] = [
   {
@@ -87,10 +86,6 @@ const doctors: Doctor[] = [
     id: 5,
   },
 ]
-
-interface BookAppointmentWithDoctor {
-  appointment: Appointment
-}
 
 const doctorAppointsmentApi: Appointment[] = [
   {
@@ -226,10 +221,10 @@ const CalendarSection = () => {
   })
 
   useEffect(() => {
-    fetchFreeTermsForDoctor(doctorId)
+    fetchFreeTermsForDoctor()
   }, [date, doctorId])
 
-  const fetchFreeTermsForDoctor = async (doctorId: number) => {
+  const fetchFreeTermsForDoctor = () => {
     const freeAppoint: Appointment[] = doctorAppointsmentApi
       .filter((appointment: Appointment) => {
         return (
@@ -306,7 +301,8 @@ const CalendarSection = () => {
                             }
                           },
                         }}
-                        children={(field) => (
+                      >
+                        {(field) => (
                           <Select
                             onValueChange={(value) => {
                               field.handleChange(Number(value))
@@ -330,7 +326,7 @@ const CalendarSection = () => {
                             </p>
                           </Select>
                         )}
-                      />
+                      </form.Field>
                     </div>
                     <div className='space-y-2 md:col-span-2'>
                       <Label>Vyberte datum</Label>
@@ -418,7 +414,8 @@ const CalendarSection = () => {
                             }
                           },
                         }}
-                        children={(field) => (
+                      >
+                        {(field) => (
                           <>
                             <Label htmlFor='name'>Jméno</Label>
                             <Input
@@ -435,7 +432,7 @@ const CalendarSection = () => {
                             </p>
                           </>
                         )}
-                      />
+                      </form.Field>
                     </div>
                     <div className='space-y-2'>
                       <form.Field
@@ -447,7 +444,8 @@ const CalendarSection = () => {
                             }
                           },
                         }}
-                        children={(field) => (
+                      >
+                        {(field) => (
                           <>
                             <Label htmlFor=''>Příjmení</Label>
                             <Input
@@ -464,7 +462,7 @@ const CalendarSection = () => {
                             </p>
                           </>
                         )}
-                      />
+                      </form.Field>
                     </div>
 
                     <div className='space-y-2 md:col-span-2'>
@@ -477,7 +475,8 @@ const CalendarSection = () => {
                             }
                           },
                         }}
-                        children={(field) => (
+                      >
+                        {(field) => (
                           <>
                             <Label htmlFor=''>Jméno</Label>
                             <Input
@@ -494,13 +493,12 @@ const CalendarSection = () => {
                             </p>
                           </>
                         )}
-                      />
+                      </form.Field>
                     </div>
 
                     <div className='space-y-2 md:col-span-2'>
-                      <form.Field
-                        name='note'
-                        children={(field) => (
+                      <form.Field name='note'>
+                        {(field) => (
                           <>
                             <Label htmlFor=''>Jméno</Label>
                             <Textarea
@@ -512,7 +510,7 @@ const CalendarSection = () => {
                             />
                           </>
                         )}
-                      />
+                      </form.Field>
                     </div>
                   </div>
                 </CardContent>
