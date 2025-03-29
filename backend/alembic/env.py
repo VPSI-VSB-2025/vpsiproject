@@ -4,7 +4,7 @@ from sqlalchemy import pool
 from alembic import context
 from sqlmodel import SQLModel
 
-from app.models.calendar import Calendar
+from app.models.appointment import Appointment
 from app.models.doctor_specialization import DoctorSpecialization
 from app.models.doctor import Doctor
 from app.models.medical_record import MedicalRecord

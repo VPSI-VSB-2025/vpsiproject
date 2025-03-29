@@ -16,6 +16,5 @@ class Nurse(SQLModel, table=True):
 
     doctor_id: Optional[int] = Field(default=None, foreign_key="doctor.id")
 
-    doctor: "Doctor" = Relationship(back_populates="nurses")
-    # Add the requests relationship
+    doctor: Optional["Doctor"] = Relationship(back_populates="nurses")
     requests: List["Request"] = Relationship(back_populates="nurse")
