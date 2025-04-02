@@ -8,7 +8,6 @@ class NurseBase(BaseModel):
     phone_number: Optional[str] = None
 
 class NurseCreate(NurseBase):
-    # Make doctor_id an optional field when creating a nurse
     doctor_id: Optional[int] = None
 
 class NurseOut(NurseBase):

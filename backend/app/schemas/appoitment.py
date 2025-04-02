@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-class CalendarBase(BaseModel):
+class AppoitmentBase(BaseModel):
     event_type: str
     date_from: datetime
     date_to: datetime
-    state: str
+    registration_mandatory: bool
     created_at: datetime
 
-class CalendarCreate(CalendarBase):
+class AppotmentCreate(AppoitmentBase):
     pass
 
-class CalendarOut(CalendarBase):
+class AppotmentOut(AppoitmentBase):
     id: int
 
     class Config:
