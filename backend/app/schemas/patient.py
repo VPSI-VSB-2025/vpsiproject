@@ -5,6 +5,7 @@ from typing import Optional
 class PatientBase(BaseModel):
     name: str
     surname: str
+    email: str
     date_of_birth: date
     sex: str
     address: str
