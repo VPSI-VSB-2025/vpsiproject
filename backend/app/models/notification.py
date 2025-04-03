@@ -1,6 +1,9 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .patient import Patient
 
 class Notification(SQLModel, table=True):
     __tablename__ = 'notification'
@@ -12,3 +15,5 @@ class Notification(SQLModel, table=True):
 
     patient_id: Optional[int] = Field(default=None, foreign_key="patient.id")
     doctor_id: Optional[int] = Field(default=None, foreign_key="doctor.id")
+
+    patient: Optional["Patient"] = Relationship(back_populates="notifications")

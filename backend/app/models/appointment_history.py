@@ -1,6 +1,9 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .patient import Patient
 
 class AppointmentHistory(SQLModel, table=True):
     __tablename__ = 'appointment_history'
@@ -12,5 +15,7 @@ class AppointmentHistory(SQLModel, table=True):
 
     appointment_id: Optional[int] = Field(default=None, foreign_key="appointment.id")
     doctor_id: Optional[int] = Field(default=None, foreign_key="doctor.id")
-    pacient_id: Optional[int] = Field(default=None, foreign_key="patient.id")
+    patient_id: Optional[int] = Field(default=None, foreign_key="patient.id")
     nurse_id: Optional[int] = Field(default=None, foreign_key="nurse.id")
+
+    patient: Optional["Patient"] = Relationship(back_populates="appointments_history")

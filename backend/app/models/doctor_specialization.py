@@ -10,4 +10,4 @@ class DoctorSpecialization(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(max_length=255)
 
-    doctors: List["Doctor"] = Relationship(back_populates="doctor_specialization")
+    doctors: List["Doctor"] = Relationship(back_populates="specialization")
