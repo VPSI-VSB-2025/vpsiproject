@@ -1,9 +1,15 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 class RequestBase(BaseModel):
     state: str
     created_at: datetime
+    description: Optional[str] = None
+    patient_id: int
+    doctor_id: int
+    appointment_id: int
+    request_type_id: Optional[int] = None
 
 class RequestCreate(RequestBase):
     pass

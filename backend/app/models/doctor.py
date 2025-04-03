@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Doctor(SQLModel, table=True):
     __tablename__ = 'doctor'
 
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(max_length=255)
     surname: str = Field(max_length=255)
     email: Optional[str] = Field(default=None, max_length=255)
@@ -25,4 +25,4 @@ class Doctor(SQLModel, table=True):
     appointments: List["Appointment"] = Relationship(back_populates="doctor")
     prescriptions: List["Prescription"] = Relationship(back_populates="doctor")
     nurses: List["Nurse"] = Relationship(back_populates="doctor")
-    specialization: Optional["DoctorSpecialization"] = Relationship(back_populates="doctors")
+    doctor_specialization: Optional["DoctorSpecialization"] = Relationship(back_populates="doctors")

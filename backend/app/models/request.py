@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from app.models.patient import Patient
     from app.models.doctor import Doctor
     from app.models.request_type import RequestType
-    from backend.app.models.appointment import Appointment
+    from app.models.appointment import Appointment
     from app.models.nurse import Nurse
     from app.models.test import Test
 
