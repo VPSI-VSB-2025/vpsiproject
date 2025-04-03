@@ -11,3 +11,5 @@ from .relation import FamilyRelation
 from .request_type import RequestType
 from .test import Test
 from .prescription_medicine import Medicine
+from .appointment_history import AppointmentHistory
+from .notification import Notification

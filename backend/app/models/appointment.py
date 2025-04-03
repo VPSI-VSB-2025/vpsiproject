@@ -18,6 +18,5 @@ class Appointment(SQLModel, table=True):
 
     doctor_id: Optional[int] = Field(default=None, foreign_key="doctor.id")
 
-    requests: list["Request"] = Relationship(back_populates="appointment")
-    
-    doctor: "Doctor" = Relationship(back_populates="appointments")  
+    requests: list["Request"] = Relationship(back_populates="appointments")
+    doctor: Optional["Doctor"] = Relationship(back_populates="appointments")

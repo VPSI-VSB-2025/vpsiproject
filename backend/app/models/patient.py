@@ -6,7 +6,6 @@ if TYPE_CHECKING:
     from app.models.medical_record import MedicalRecord
     from app.models.prescription import Prescription
     from app.models.request import Request
-    from app.models.relation import FamilyRelation
     from app.models.appointment_history import AppointmentHistory
     from app.models.notification import Notification
 
@@ -26,10 +25,8 @@ class Patient(SQLModel, table=True):
     medical_records: List["MedicalRecord"] = Relationship(back_populates="patient")
     prescriptions: List["Prescription"] = Relationship(back_populates="patient")
     requests: List["Request"] = Relationship(back_populates="patient")
+    appointments_history: List["AppointmentHistory"] = Relationship(back_populates="patient")
+    notifications: List["Notification"] = Relationship(back_populates="patient")
 
-    #appointments_history: List["AppointmentHistory"] = Relationship(back_populates="patient")
-    #notifications: List["Notification"] = Relationship(back_populates="patient")
-    
     #relations_as_patient: List["FamilyRelation"] = Relationship(back_populates="patient")
     #relations_as_related: List["FamilyRelation"] = Relationship(back_populates="related")
-
