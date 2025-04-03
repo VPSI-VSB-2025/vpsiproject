@@ -28,5 +28,5 @@ class Request(SQLModel, table=True):
     doctor: "Doctor" = Relationship(back_populates="requests")
     nurse: "Nurse" = Relationship(back_populates="requests")
     request_type: "RequestType" = Relationship(back_populates="requests")
-    appointments: "Appointment" = Relationship(back_populates="requests")
+    appointment: "Appointment" = Relationship(back_populates="requests")
     tests: List["Test"] = Relationship(back_populates="request")

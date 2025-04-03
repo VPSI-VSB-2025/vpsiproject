@@ -4,6 +4,7 @@ from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.request import Request
+    from app.models.doctor import Doctor
 
 class Appointment(SQLModel, table=True):
     __tablename__ = 'appointment'
@@ -17,4 +18,6 @@ class Appointment(SQLModel, table=True):
 
     doctor_id: Optional[int] = Field(default=None, foreign_key="doctor.id")
 
-    requests: list["Request"] = Relationship(back_populates="calendar_event")
+    requests: list["Request"] = Relationship(back_populates="appointment")
+    
+    doctor: "Doctor" = Relationship(back_populates="appointments")  

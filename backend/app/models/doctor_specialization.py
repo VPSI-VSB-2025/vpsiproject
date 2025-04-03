@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, TYPE_CHECKING, List
+from typing import Optional, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.doctor import Doctor

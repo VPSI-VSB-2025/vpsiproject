@@ -26,8 +26,10 @@ class Patient(SQLModel, table=True):
     medical_records: List["MedicalRecord"] = Relationship(back_populates="patient")
     prescriptions: List["Prescription"] = Relationship(back_populates="patient")
     requests: List["Request"] = Relationship(back_populates="patient")
-    appointments_history: List["AppointmentHistory"] = Relationship(back_populates="patient")
-    notifications: List["Notification"] = Relationship(back_populates="patient")
 
-    relations_as_patient: List["FamilyRelation"] = Relationship(back_populates="patient")
-    relations_as_related: List["FamilyRelation"] = Relationship(back_populates="related")
+    #appointments_history: List["AppointmentHistory"] = Relationship(back_populates="patient")
+    #notifications: List["Notification"] = Relationship(back_populates="patient")
+    
+    #relations_as_patient: List["FamilyRelation"] = Relationship(back_populates="patient")
+    #relations_as_related: List["FamilyRelation"] = Relationship(back_populates="related")
+

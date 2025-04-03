@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class RequestTypeBase(BaseModel):
     name: str
     description: str
-    length: int
+    length: int 
 
 class RequestTypeCreate(RequestTypeBase):
     pass
