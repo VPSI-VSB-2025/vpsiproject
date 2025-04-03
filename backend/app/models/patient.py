@@ -28,5 +28,5 @@ class Patient(SQLModel, table=True):
     appointments_history: List["AppointmentHistory"] = Relationship(back_populates="patient")
     notifications: List["Notification"] = Relationship(back_populates="patient")
 
-    #relations_as_patient: List["FamilyRelation"] = Relationship(back_populates="patient")
-    #relations_as_related: List["FamilyRelation"] = Relationship(back_populates="related")
+    # relations_as_patient: List["FamilyRelation"] = Relationship(back_populates="patient")
+    # relations_as_related: List["FamilyRelation"] = Relationship(back_populates="related")

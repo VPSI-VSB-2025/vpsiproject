@@ -7,9 +7,9 @@ from app.schemas.request import RequestCreate
 class RequestService:
     @staticmethod
     def create_request(db: Session, request: RequestCreate):
-        patient = db.query(Patient).filter(Patient.id == request.patient_id).first()
-        appointment = db.query(Appointment).filter(Appointment.id == request.appointment_id).first()
-        
+        # patient = db.query(Patient).filter(Patient.id == request.patient_id).first()
+        # appointment = db.query(Appointment).filter(Appointment.id == request.appointment_id).first()
+
         db_request = Request(**request.model_dump())
         db.add(db_request)
         db.commit()

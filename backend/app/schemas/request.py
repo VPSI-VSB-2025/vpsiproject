@@ -7,7 +7,7 @@ class RequestBase(BaseModel):
     created_at: datetime
     description: Optional[str] = None
     patient_id: int
-    doctor_id: int 
+    doctor_id: int
     appointment_id: int
     request_type_id: Optional[int] = None
 
