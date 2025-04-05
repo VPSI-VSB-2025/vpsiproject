@@ -10,7 +10,7 @@ class AppointmentService:
         db.commit()
         db.refresh(db_appointment)
         return db_appointment
-
+    
     @staticmethod
     def get_appointment(db: Session, appointment_id: int):
         return db.query(Appointment).filter(Appointment.id == appointment_id).first()

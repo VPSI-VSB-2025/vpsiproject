@@ -23,3 +23,11 @@ class RequestService:
     @staticmethod
     def get_requests(db: Session, skip: int = 0, limit: int = 100):
         return db.query(Request).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def check_existing_request(db: Session, patient_id: int, appointment_id: int, doctor_id: int):
+        return db.query(Request).filter(
+            Request.patient_id == patient_id,
+            Request.appointment_id == appointment_id,
+            Request.doctor_id == doctor_id,
+        ).first()
