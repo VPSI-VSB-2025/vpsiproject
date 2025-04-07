@@ -190,7 +190,7 @@ const CalendarSection = () => {
     },
   })
 
-  const fetchFreeTermsForDoctor = () => {
+  const fetchFreeTermsForDoctor = useCallback(() => {
     if (appointments.length === 0) {
       return
     }
@@ -208,7 +208,7 @@ const CalendarSection = () => {
       .sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime())
 
     setDoctorFreeAppointments(freeAppoint)
-  }
+  }, [appointments, doctorId, date])
 
   // Get public appointments (without registration required)
   const withoutRegistrationAppointments = useCallback(() => {

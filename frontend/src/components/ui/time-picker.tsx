@@ -28,20 +28,6 @@ export function TimePicker({ date, setDate, className }: TimePickerProps) {
   // The selected minute (0-59)
   const minute = date ? date.getMinutes() : 0
 
-  // Update the date with the selected hour and minute
-  const handleTimeChange = (newHour: number, newMinute: number) => {
-    if (!date) {
-      const newDate = new Date()
-      newDate.setHours(newHour, newMinute, 0, 0)
-      setDate(newDate)
-      return
-    }
-
-    const newDate = new Date(date)
-    newDate.setHours(newHour, newMinute, 0, 0)
-    setDate(newDate)
-  }
-
   // Handle hour change from select
   const handleHourChange = (value: string) => {
     const newHour = parseInt(value, 10)
