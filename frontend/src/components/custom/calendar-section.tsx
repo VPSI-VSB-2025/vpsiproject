@@ -33,7 +33,6 @@ import {
   createPatient,
 } from "@/utils/api"
 import { Specialization } from "@/types/specialization"
-import { request } from "http"
 
 const CalendarSection = () => {
   const [doctorFreeAppointments, setDoctorFreeAppointments] = useState<Appointment[]>([])
@@ -162,27 +161,34 @@ const CalendarSection = () => {
         toast.error("Vyberte lékaře a termín")
         return
       }
+
+      // Ensure we have a patient ID
+      const patientId = patient ? patient.id : createdPatient?.id
+      if (!patientId) {
+        toast.error("Nepodařilo se vytvořit pacienta")
+        return
+      }
+
+      // Ensure we have a request type ID
+      const requestTypeId = requestType ? requestType.id : createdRequestType?.id
+      if (!requestTypeId) {
+        toast.error("Nepodařilo se vytvořit typ žádanky")
+        return
+      }
+
       const requestData = {
         state: "pending",
         //createdAt: new Date().toISOString(), // Keep full ISO format: YYYY-MM-DDTHH:MM:SS.SSSZ
         description: value.note || "Konzultace",
-        patient_id: patient ? patient.id : createdPatient?.id,
+        patient_id: patientId,
         doctor_id: value.doctor_id,
         appointment_id: value.appointment_id,
-        request_type_id: requestType ? requestType.id : createdRequestType?.id,
+        request_type_id: requestTypeId,
       }
 
-      console.log("Request data:", requestData)
-
-      createRequestMutation.mutate(requestData as any)
+      createRequestMutation.mutate(requestData)
     },
   })
-
-  useEffect(() => {
-    if (doctorId && date) {
-      fetchFreeTermsForDoctor()
-    }
-  }, [date, doctorId, appointments])
 
   const fetchFreeTermsForDoctor = () => {
     if (appointments.length === 0) {
@@ -220,6 +226,12 @@ const CalendarSection = () => {
       })
       .sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime())
   }, [date, doctorId, appointments])
+
+  useEffect(() => {
+    if (doctorId && date) {
+      fetchFreeTermsForDoctor()
+    }
+  }, [date, doctorId, appointments, fetchFreeTermsForDoctor])
 
   return (
     <ContainerSection id='calendar' className='py-12 md:py-24 lg:py-32'>

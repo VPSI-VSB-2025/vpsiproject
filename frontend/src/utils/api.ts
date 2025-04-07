@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { Doctor } from "@/types/doctor";
 import { Nurse } from "@/types/nurse";
 import { Appointment } from "@/types/appointment";
@@ -8,7 +8,7 @@ import { MedicalRecord } from "@/types/medical_record";
 import { Request } from "@/types/request";
 import { RequestType } from "@/types/request_type";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://vpsiproject.onrender.com";
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -89,7 +89,7 @@ export const fetchAppointments = async (options?: { skip?: number; limit?: numbe
   }
 };
 
-export const fetchAppointmentsByDoctor = async (doctorId: number, options?: { skip?: number; limit?: number }): Promise<Appointment[]> => {
+export const fetchAppointmentsByDoctor = async (doctorId: number): Promise<Appointment[]> => {
   try {
     const response = await api.get(`/appointments/`);
 
@@ -147,14 +147,7 @@ export const fetchRequest = async (requestId: number): Promise<Request | null> =
   }
 };
 
-export const createRequest = async (request: {
-  state: string;
-  description: string;
-  patient_id: number;
-  doctor_id: number;
-  appointment_id: number;
-  request_type_id: number;
-}): Promise<Request | null> => {
+export const createRequest = async (request: Request): Promise<Request | null> => {
   try {
     const response = await api.post("/requests/", request);
     return response.data;
@@ -269,23 +262,3 @@ export const createSpecialization = async (name: string): Promise<Specialization
   }
 };
 
-// List all available terms endpoint
-export const fetchAvailableTerms = async (doctorId?: number, date?: string): Promise<any[]> => {
-  try {
-    let url = "/list_all_terms/";
-    const params = [];
-    
-    if (doctorId) params.push(`doctor_id=${doctorId}`);
-    if (date) params.push(`date=${date}`);
-    
-    if (params.length > 0) {
-      url += "?" + params.join("&");
-    }
-    
-    const response = await api.get(url);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching available terms:", error);
-    return [];
-  }
-};

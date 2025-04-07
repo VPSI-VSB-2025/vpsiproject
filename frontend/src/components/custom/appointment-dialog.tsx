@@ -27,7 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { TimePicker } from "@/components/ui/time-picker"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { createAppointment, fetchDoctors } from "@/utils/api"
@@ -49,7 +48,6 @@ export function AppointmentDialog({ open, onOpenChange, userRole }: AppointmentD
   const [date, setDate] = useState<Date>()
   const [startTime, setStartTime] = useState<string>("")
   const [duration, setDuration] = useState<string>("30")
-  const [notes, setNotes] = useState<string>("")
   const [selectedDoctor, setSelectedDoctor] = useState<string>("")
   const [eventType, setEventType] = useState<string>("Consultation")
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false)
@@ -95,7 +93,6 @@ export function AppointmentDialog({ open, onOpenChange, userRole }: AppointmentD
     setDate(undefined)
     setStartTime("")
     setDuration("30")
-    setNotes("")
     if (userRole !== "doctor") {
       setSelectedDoctor("")
     }

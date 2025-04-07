@@ -22,10 +22,6 @@ interface TimePickerProps {
 }
 
 export function TimePicker({ date, setDate, className }: TimePickerProps) {
-  const minuteRef = React.useRef<HTMLInputElement>(null)
-  const hourRef = React.useRef<HTMLInputElement>(null)
-  const [isPending, startTransition] = React.useTransition()
-
   // The selected hour in 24-hour format (0-23)
   const hour = date ? date.getHours() : 0
 
@@ -50,20 +46,12 @@ export function TimePicker({ date, setDate, className }: TimePickerProps) {
   const handleHourChange = (value: string) => {
     const newHour = parseInt(value, 10)
     if (isNaN(newHour)) return
-
-    startTransition(() => {
-      handleTimeChange(newHour, minute)
-    })
   }
 
   // Handle minute change from select
   const handleMinuteChange = (value: string) => {
     const newMinute = parseInt(value, 10)
     if (isNaN(newMinute)) return
-
-    startTransition(() => {
-      handleTimeChange(hour, newMinute)
-    })
   }
 
   return (

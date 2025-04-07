@@ -167,7 +167,7 @@ export function AppointmentCalendar({ userRole, onCreateAppointment }: Appointme
     }
   }
 
-  const handleBlockTime = async (id: number) => {
+  const handleBlockTime = async () => {
     // This would create a new appointment with status "blocked"
     toast.success("Čas byl zablokován")
     // Implementation would depend on your API
@@ -256,11 +256,7 @@ export function AppointmentCalendar({ userRole, onCreateAppointment }: Appointme
               </CardContent>
               <CardFooter>
                 {appointment.status === "available" ? (
-                  <Button
-                    size='sm'
-                    variant='outline'
-                    onClick={() => handleBlockTime(appointment.id)}
-                  >
+                  <Button size='sm' variant='outline' onClick={() => handleBlockTime()}>
                     Blokovat čas
                   </Button>
                 ) : appointment.status === "pending" ? (
