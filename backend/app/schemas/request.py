@@ -4,7 +4,6 @@ from typing import Optional
 
 class RequestBase(BaseModel):
     state: str
-    created_at: datetime
     description: Optional[str] = None
     patient_id: int
     doctor_id: int

@@ -7,6 +7,7 @@ class AppointmentBase(BaseModel):
     date_to: datetime
     registration_mandatory: bool
     created_at: datetime
+    doctor_id: int
 
 class AppointmentCreate(AppointmentBase):
     pass
