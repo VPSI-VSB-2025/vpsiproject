@@ -21,7 +21,7 @@ interface TimePickerProps {
   className?: string
 }
 
-export function TimePicker({ date, setDate, className }: TimePickerProps) {
+export function TimePicker({ date, className }: TimePickerProps) {
   // The selected hour in 24-hour format (0-23)
   const hour = date ? date.getHours() : 0
 
