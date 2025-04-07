@@ -14,6 +14,7 @@ import { AppointmentCalendar } from "@/components/custom/appointment-calendar"
 import { RequestsTable } from "@/components/custom/request-table"
 import { AppointmentDialog } from "@/components/custom/appointment-dialog"
 import { fetchDoctors, fetchNurses, fetchAppointments, fetchRequests } from "@/utils/api"
+import { Request } from "@/types/request"
 
 export default function DashboardPage() {
   const { isLoaded, isSignedIn, user } = useUser()
@@ -99,7 +100,7 @@ export default function DashboardPage() {
       // Check if the appointment is available based on:
       // 1. No requests associated with it or all requests are not in 'approved' state
       // 2. Registration is not mandatory (public appointments)
-      const hasApprovedRequest = app.requests?.some((req) => req.state === "approved")
+      const hasApprovedRequest = app.requests?.some((req: any) => req.state === "approved")
       return (
         !hasApprovedRequest &&
         (app.status === "available" || app.status === "Available" || !app.registration_mandatory)

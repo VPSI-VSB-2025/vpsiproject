@@ -112,22 +112,9 @@ export function AppointmentCalendar({ userRole, onCreateAppointment }: Appointme
       status = "pending"
     }
 
-    // Get patient name from the request relationship if available
-    let patientName = "Jméno pacienta nedostupné"
-    if (
-      appointment.requests &&
-      appointment.requests.length > 0 &&
-      appointment.requests[0].patient &&
-      appointment.requests[0].patient.name &&
-      appointment.requests[0].patient.surname
-    ) {
-      patientName = `${appointment.requests[0].patient.name} ${appointment.requests[0].patient.surname}`
-    }
-
     return {
       id: appointment.id,
       time: timeString,
-      patientName: patientName,
       reason: appointment.event_type || "Neuvedeno",
       status: status as "available" | "confirmed" | "pending",
     }
@@ -246,7 +233,7 @@ export function AppointmentCalendar({ userRole, onCreateAppointment }: Appointme
               <CardHeader className='pb-2'>
                 <CardTitle className='text-lg'>{appointment.time}</CardTitle>
                 <CardDescription>
-                  {appointment.status === "available" ? "Volný termín" : appointment.patientName}
+                  {appointment.status === "available" ? "Volný termín" : "Zabraný termín"}
                 </CardDescription>
               </CardHeader>
               <CardContent>

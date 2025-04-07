@@ -1,3 +1,5 @@
+import { Request } from "./request";
+
 export interface Appointment {
   id: number;
   doctor_id: number;

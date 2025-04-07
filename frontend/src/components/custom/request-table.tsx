@@ -98,12 +98,12 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
       })
 
       return {
-        id: request.id.toString(),
+        id: (request.id ?? 0).toString(),
         patientName: `${patient.name} ${patient.surname}`,
         date: dateString,
         time: timeString,
-        reason: request.reason || request.type || "Konzultace",
-        status: (request.status?.toLowerCase() || "pending") as
+        reason: request.description,
+        status: (request.state?.toLowerCase() || "pending") as
           | "pending"
           | "approved"
           | "declined"
