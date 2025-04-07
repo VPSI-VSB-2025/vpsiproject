@@ -6,6 +6,7 @@ import { Specialization } from "@/types/specialization";
 import { Patient } from "@/types/patient";
 import { MedicalRecord } from "@/types/medical_record";
 import { Request } from "@/types/request";
+import { RequestType } from "@/types/request_type";
 
 const API_BASE_URL = "http://localhost:8000";
 
@@ -88,6 +89,21 @@ export const fetchAppointments = async (options?: { skip?: number; limit?: numbe
   }
 };
 
+export const fetchAppointmentsByDoctor = async (doctorId: number, options?: { skip?: number; limit?: number }): Promise<Appointment[]> => {
+  try {
+    const response = await api.get(`/appointments/`);
+
+    const filteredAppointments = response.data.filter((appointment: Appointment) => {
+      return appointment.doctor_id === doctorId;
+    })
+
+    return filteredAppointments;
+  } catch (error) {
+    console.error(`Error fetching appointments for doctor ${doctorId}:`, error);
+    return [];
+  }
+}
+
 export const fetchAppointment = async (appointmentId: number): Promise<Appointment | null> => {
   try {
     const response = await api.get(`/appointments/${appointmentId}`);
@@ -107,6 +123,7 @@ export const createAppointment = async (appointment: Omit<Appointment, "id" | "c
     return null;
   }
 };
+
 
 // Request endpoints
 export const fetchRequests = async (options?: { skip?: number; limit?: number }): Promise<Request[]> => {
@@ -130,7 +147,14 @@ export const fetchRequest = async (requestId: number): Promise<Request | null> =
   }
 };
 
-export const createRequest = async (request: Omit<Request, "id" | "created_at">): Promise<Request | null> => {
+export const createRequest = async (request: {
+  state: string;
+  description: string;
+  patient_id: number;
+  doctor_id: number;
+  appointment_id: number;
+  request_type_id: number;
+}): Promise<Request | null> => {
   try {
     const response = await api.post("/requests/", request);
     return response.data;
@@ -155,7 +179,7 @@ export const updateRequestStatus = async (requestId: number, status: string): Pr
 };
 
 // Request types endpoints
-export const fetchRequestTypes = async (): Promise<any[]> => {
+export const fetchRequestTypes = async (): Promise<RequestType[]> => {
   try {
     const response = await api.get("/request_types/");
     return response.data;
@@ -165,11 +189,24 @@ export const fetchRequestTypes = async (): Promise<any[]> => {
   }
 };
 
-// Patient endpoints
-export const fetchPatients = async (options?: { skip?: number; limit?: number }): Promise<Patient[]> => {
-  const { skip = 0, limit = 100 } = options || {};
+export const createRequestType = async (
+  name: string,
+  description: string,
+  length: number
+): Promise<RequestType | null> => {
   try {
-    const response = await api.get(`/patients/?skip=${skip}&limit=${limit}`);
+    const response = await api.post("/request_types/", { name, description, length });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating request type:", error);
+    return null;
+  }
+}
+
+// Patient endpoints
+export const fetchPatients = async (): Promise<Patient[]> => {
+  try {
+    const response = await api.get(`/patients/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching patients:", error);
@@ -187,7 +224,7 @@ export const fetchPatient = async (patientId: number): Promise<Patient | null> =
   }
 };
 
-export const createPatient = async (patient: Omit<Patient, "id">): Promise<Patient | null> => {
+export const createPatient = async (patient: Patient): Promise<Patient | null> => {
   try {
     const response = await api.post("/patients/", patient);
     return response.data;
@@ -208,10 +245,11 @@ export const fetchMedicalRecords = async (patientId: number): Promise<MedicalRec
   }
 };
 
+
 // Specialization endpoints
 export const fetchSpecializations = async (): Promise<Specialization[]> => {
   try {
-    const response = await api.get("/doctor_specializations/");
+    const response = await api.get("/specializations");
     return response.data;
   } catch (error) {
     console.error("Error fetching specializations:", error);
@@ -219,9 +257,11 @@ export const fetchSpecializations = async (): Promise<Specialization[]> => {
   }
 };
 
+
+
 export const createSpecialization = async (name: string): Promise<Specialization | null> => {
   try {
-    const response = await api.post("/doctor_specializations/", { name });
+    const response = await api.post("/specializations", { name });
     return response.data;
   } catch (error) {
     console.error("Error creating specialization:", error);

@@ -165,9 +165,10 @@ export default function RoleSelectionForm() {
       surname: user?.lastName,
       email: user?.emailAddresses[0].emailAddress,
       phone_number: values.phoneNumber,
-      specialization: values.specialization,
+      specialization_id: values.specialization,
     })
   }
+
   const addNurse = async (values: z.infer<typeof formSchema>) => {
     return axios.post("http://localhost:8000/nurses/", {
       name: user?.firstName,

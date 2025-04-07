@@ -22,7 +22,18 @@ import { Doctor } from "@/types/doctor"
 import { Appointment } from "@/types/appointment"
 import { formatDateToCzech } from "@/utils/helper"
 import { useForm } from "@tanstack/react-form"
-import { fetchDoctors, fetchAppointments, createRequest } from "@/utils/api"
+import {
+  fetchDoctors,
+  fetchAppointments,
+  createRequest,
+  fetchSpecializations,
+  fetchRequestTypes,
+  createRequestType,
+  fetchPatients,
+  createPatient,
+} from "@/utils/api"
+import { Specialization } from "@/types/specialization"
+import { request } from "http"
 
 const CalendarSection = () => {
   const [doctorFreeAppointments, setDoctorFreeAppointments] = useState<Appointment[]>([])
@@ -34,6 +45,20 @@ const CalendarSection = () => {
   const { data: doctors = [], isLoading: isLoadingDoctors } = useQuery({
     queryKey: ["doctors"],
     queryFn: fetchDoctors,
+  })
+
+  // Fetch specializations from API
+  const { data: specializations = [] } = useQuery({
+    queryKey: ["specializations"],
+    queryFn: () => fetchSpecializations(),
+  })
+  // Add specializations to doctors
+  doctors.map((doctor: Doctor) => {
+    specializations.forEach((specialization: Specialization) => {
+      if (doctor.specialization_id === specialization.id) {
+        doctor.specialization = specialization.name
+      }
+    })
   })
 
   // Fetch appointments for selected doctor and date
@@ -69,27 +94,85 @@ const CalendarSection = () => {
       firstname: "",
       lastname: "",
       phone: "",
+      email: "",
+      date_of_birth: "",
+      sex: "",
+      address: "",
+      personal_number: "",
       note: "",
     },
     onSubmit: async ({ value }) => {
+      // First fetch all request types:
+      const requestTypes = await fetchRequestTypes()
+
+      // Check if the request type exists
+      const requestType = requestTypes.find(
+        (type) =>
+          type.name ===
+          appointments[appointments.findIndex((a) => a.id === value.appointment_id)].event_type
+      )
+
+      // If it's not existing, create it
+      let createdRequestType
+      if (!requestType) {
+        const newRequestType = {
+          name: appointments[appointments.findIndex((a) => a.id === value.appointment_id)]
+            .event_type,
+          description: "Popis nového typu žádanky",
+          length: 20,
+        }
+
+        createdRequestType = await createRequestType(
+          newRequestType.name,
+          newRequestType.description,
+          newRequestType.length
+        )
+      }
+
+      // Secondly, fetch all patients:
+      const patients = await fetchPatients()
+
+      // Check if the patient exists
+      const patient = patients.find((p) => p.personal_number === value.personal_number)
+
+      // If it's not existing, create it
+      let createdPatient
+      if (!patient) {
+        const newPatient = {
+          name: value.firstname,
+          surname: value.lastname,
+          email: value.email,
+          date_of_birth: value.date_of_birth
+            .split(".")
+            .map((part, index) => (index === 1 && part.length === 1 ? `0${part}` : part))
+            .reverse()
+            .join("-"),
+          sex: value.sex,
+          address: value.address,
+          phone_number: value.phone,
+          personal_number: value.personal_number,
+        }
+
+        console.log("Creating new patient:", newPatient)
+
+        createdPatient = await createPatient(newPatient)
+      }
+
       if (!value.appointment_id || !value.doctor_id) {
         toast.error("Vyberte lékaře a termín")
         return
       }
-
-      // Create a request object from form data
       const requestData = {
-        patient_id: 0, // This would need to be created or fetched in a real app
-        type_id: 1, // Default consultation type
-        reason: value.note || "Konzultace",
-        status: "pending",
+        state: "pending",
+        //createdAt: new Date().toISOString(), // Keep full ISO format: YYYY-MM-DDTHH:MM:SS.SSSZ
+        description: value.note || "Konzultace",
+        patient_id: patient ? patient.id : createdPatient?.id,
+        doctor_id: value.doctor_id,
         appointment_id: value.appointment_id,
-        patient_info: {
-          name: value.firstname,
-          surname: value.lastname,
-          phone_number: value.phone,
-        },
+        request_type_id: requestType ? requestType.id : createdRequestType?.id,
       }
+
+      console.log("Request data:", requestData)
 
       createRequestMutation.mutate(requestData as any)
     },
@@ -102,12 +185,14 @@ const CalendarSection = () => {
   }, [date, doctorId, appointments])
 
   const fetchFreeTermsForDoctor = () => {
-    if (!appointments) return
+    if (appointments.length === 0) {
+      return
+    }
 
     const freeAppoint: Appointment[] = appointments
       .filter((appointment: Appointment) => {
         return (
-          appointment.doctor_id === form.getFieldValue("doctor_id") &&
+          appointment.doctor_id === doctorId &&
           appointment.registration_mandatory === true &&
           new Date(date).getDate() === new Date(appointment.date_from).getDate() &&
           new Date(date).getMonth() === new Date(appointment.date_from).getMonth() &&
@@ -368,6 +453,165 @@ const CalendarSection = () => {
                             <Input
                               id='phone'
                               placeholder='Zadejte Telefonní číslo'
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                field.handleChange(e.target.value)
+                              }
+                            />
+                            <p className='text-red-500'>
+                              {field.state.meta.errors.length ? (
+                                <em>{field.state.meta.errors.join(",")}</em>
+                              ) : null}
+                            </p>
+                          </>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className='space-y-2 md:col-span-2'>
+                      <form.Field
+                        name='email'
+                        validators={{
+                          onChange: ({ value }) => {
+                            if (value === "") {
+                              return "email je povinný"
+                            }
+                          },
+                        }}
+                      >
+                        {(field) => (
+                          <>
+                            <Label htmlFor=''>Email</Label>
+                            <Input
+                              id='email'
+                              placeholder='Zadejte Email'
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                field.handleChange(e.target.value)
+                              }
+                            />
+                            <p className='text-red-500'>
+                              {field.state.meta.errors.length ? (
+                                <em>{field.state.meta.errors.join(",")}</em>
+                              ) : null}
+                            </p>
+                          </>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className='space-y-2 md:col-span-2'>
+                      <form.Field
+                        name='date_of_birth'
+                        validators={{
+                          onChange: ({ value }) => {
+                            if (value === "") {
+                              return "datum narození je povinné"
+                            }
+                          },
+                        }}
+                      >
+                        {(field) => (
+                          <>
+                            <Label htmlFor=''>
+                              Datum narození {"(den.měsíc.rok - například 10.5.1980)"}
+                            </Label>
+                            <Input
+                              id='date_of_birth'
+                              placeholder='Zadejte Datum Narození'
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                field.handleChange(e.target.value)
+                              }
+                            />
+                            <p className='text-red-500'>
+                              {field.state.meta.errors.length ? (
+                                <em>{field.state.meta.errors.join(",")}</em>
+                              ) : null}
+                            </p>
+                          </>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className='space-y-2 md:col-span-2'>
+                      <form.Field
+                        name='sex'
+                        validators={{
+                          onChange: ({ value }) => {
+                            if (value === "") {
+                              return "pohlaví je povinné"
+                            }
+                          },
+                        }}
+                      >
+                        {(field) => (
+                          <>
+                            <Label htmlFor=''>
+                              Pohlaví {"("}F pro ženu, M pro muže, O pro jiné{")"}
+                            </Label>
+                            <Input
+                              id='sex'
+                              placeholder='Zadejte Pohlaví'
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                field.handleChange(e.target.value)
+                              }
+                            />
+                            <p className='text-red-500'>
+                              {field.state.meta.errors.length ? (
+                                <em>{field.state.meta.errors.join(",")}</em>
+                              ) : null}
+                            </p>
+                          </>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className='space-y-2 md:col-span-2'>
+                      <form.Field
+                        name='address'
+                        validators={{
+                          onChange: ({ value }) => {
+                            if (value === "") {
+                              return "adresa je povinná"
+                            }
+                          },
+                        }}
+                      >
+                        {(field) => (
+                          <>
+                            <Label htmlFor=''>Adresa</Label>
+                            <Input
+                              id='address'
+                              placeholder='Zadejte Adresu'
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                field.handleChange(e.target.value)
+                              }
+                            />
+                            <p className='text-red-500'>
+                              {field.state.meta.errors.length ? (
+                                <em>{field.state.meta.errors.join(",")}</em>
+                              ) : null}
+                            </p>
+                          </>
+                        )}
+                      </form.Field>
+                    </div>
+
+                    <div className='space-y-2 md:col-span-2'>
+                      <form.Field
+                        name='personal_number'
+                        validators={{
+                          onChange: ({ value }) => {
+                            if (value === "") {
+                              return "rodné číslo je povinné"
+                            }
+                          },
+                        }}
+                      >
+                        {(field) => (
+                          <>
+                            <Label htmlFor=''>Rodné číslo</Label>
+                            <Input
+                              id='personal_number'
+                              placeholder='Zadejte Rodné číslo'
                               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 field.handleChange(e.target.value)
                               }

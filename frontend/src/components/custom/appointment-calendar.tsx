@@ -18,8 +18,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { fetchAppointments, updateRequestStatus } from "@/utils/api"
+import { fetchAppointmentsByDoctor, fetchDoctors, updateRequestStatus } from "@/utils/api"
 import { toast } from "sonner"
+import { useUser } from "@clerk/nextjs"
 
 interface AppointmentCalendarProps {
   userRole: "doctor" | "nurse"
@@ -29,10 +30,28 @@ interface AppointmentCalendarProps {
 export function AppointmentCalendar({ userRole, onCreateAppointment }: AppointmentCalendarProps) {
   const [date, setDate] = useState<Date>(new Date())
   const [formattedDate, setFormattedDate] = useState<string>("")
+  const [selectedDoctor, setSelectedDoctor] = useState<number>(0)
+
+  const { user } = useUser()
+
+  // Fetch all doctors and compare email adresses
+  const userEmail = user?.emailAddresses[0]?.emailAddress
+
+  fetchDoctors().then((doctors) => {
+    const currentDoctor = doctors.find((doctor) => doctor.email === userEmail)
+    if (currentDoctor) {
+      setSelectedDoctor(currentDoctor.id)
+    }
+  })
 
   useEffect(() => {
     // Format the date as YYYY-MM-DD for the API
-    setFormattedDate(date.toISOString().split("T")[0])
+
+    const dateObject = new Date(date)
+    dateObject.setDate(dateObject.getDate() + 1)
+    const newFormattedDate = dateObject.toISOString().split("T")[0]
+
+    setFormattedDate(newFormattedDate)
   }, [date])
 
   // Fetch appointments from the API
@@ -42,7 +61,7 @@ export function AppointmentCalendar({ userRole, onCreateAppointment }: Appointme
     refetch,
   } = useQuery({
     queryKey: ["appointments", formattedDate],
-    queryFn: () => fetchAppointments(),
+    queryFn: () => fetchAppointmentsByDoctor(selectedDoctor),
     enabled: !!formattedDate,
   })
 
@@ -56,8 +75,15 @@ export function AppointmentCalendar({ userRole, onCreateAppointment }: Appointme
       }
 
       try {
-        const appointmentDate = new Date(appointment.date_from).toISOString().split("T")[0]
-        return appointmentDate === formattedDate
+        // Convert both dates to their local date strings to avoid timezone issues
+        const appointmentDate = new Date(appointment.date_from)
+        const selectedDate = new Date(formattedDate)
+
+        return (
+          appointmentDate.getFullYear() === selectedDate.getFullYear() &&
+          appointmentDate.getMonth() === selectedDate.getMonth() &&
+          appointmentDate.getDate() === selectedDate.getDate()
+        )
       } catch (error) {
         console.error("Error parsing date:", appointment.date_from, error)
         return false

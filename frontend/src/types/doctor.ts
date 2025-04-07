@@ -4,5 +4,6 @@ export interface Doctor {
   surname: string
   email: string
   phone_number: string
-  specialization: number
+  specialization_id: number
+  specialization: string
 }

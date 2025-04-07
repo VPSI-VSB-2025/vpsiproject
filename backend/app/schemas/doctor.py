@@ -6,6 +6,7 @@ class DoctorBase(BaseModel):
     surname: str
     email: Optional[str] = None
     phone_number: Optional[str] = None
+    specialization_id: Optional[int] = None
 
 class DoctorCreate(DoctorBase):
     pass

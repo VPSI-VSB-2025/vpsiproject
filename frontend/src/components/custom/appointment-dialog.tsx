@@ -31,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { TimePicker } from "@/components/ui/time-picker"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { createAppointment, fetchDoctors } from "@/utils/api"
+import { useUser } from "@clerk/nextjs"
 
 interface Doctor {
   id: number
@@ -54,6 +55,8 @@ export function AppointmentDialog({ open, onOpenChange, userRole }: AppointmentD
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false)
 
   const queryClient = useQueryClient()
+
+  const { user } = useUser()
 
   // Fetch doctors for the dropdown
   const { data: doctors, isLoading: isLoadingDoctors } = useQuery<Doctor[]>({
@@ -106,6 +109,16 @@ export function AppointmentDialog({ open, onOpenChange, userRole }: AppointmentD
       toast.error("Vyplňte prosím všechna povinná pole")
       return
     }
+
+    // Fetch all doctors and compare email adresses
+    const userEmail = user?.emailAddresses[0]?.emailAddress
+
+    fetchDoctors().then((doctors) => {
+      const currentDoctor = doctors.find((doctor) => doctor.email === userEmail)
+      if (currentDoctor) {
+        setSelectedDoctor(currentDoctor.id.toString())
+      }
+    })
 
     // Combine date and time to create start and end timestamps
     const startDateTime = new Date(date)
@@ -272,18 +285,6 @@ export function AppointmentDialog({ open, onOpenChange, userRole }: AppointmentD
                   <SelectItem value='60'>60 minut</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            <div className='grid grid-cols-4 items-center gap-4'>
-              <Label htmlFor='notes' className='text-right'>
-                Poznámky
-              </Label>
-              <Textarea
-                id='notes'
-                placeholder='Přidejte jakékoliv speciální poznámky k tomuto termínu'
-                className='col-span-3'
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
             </div>
           </div>
           <DialogFooter>
