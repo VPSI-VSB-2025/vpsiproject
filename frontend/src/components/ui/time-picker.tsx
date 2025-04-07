@@ -21,31 +21,67 @@ interface TimePickerProps {
   className?: string
 }
 
-export function TimePicker({ date, className }: TimePickerProps) {
+export function TimePicker({ date, setDate, className }: TimePickerProps) {
+  const minuteRef = React.useRef<HTMLInputElement>(null)
+  const hourRef = React.useRef<HTMLInputElement>(null)
+  const [isPending, startTransition] = React.useTransition()
+
   // The selected hour in 24-hour format (0-23)
   const hour = date ? date.getHours() : 0
 
   // The selected minute (0-59)
   const minute = date ? date.getMinutes() : 0
 
-  // Handle hour change from select
-  const handleHourChange = (value: string) => {
-    const newHour = parseInt(value, 10)
-    if (isNaN(newHour)) return
+  // Update the date with the selected hour and minute
+  const handleTimeChange = (newHour: number, newMinute: number) => {
+    if (!date) {
+      const newDate = new Date()
+      newDate.setHours(newHour, newMinute, 0, 0)
+      setDate(newDate)
+      return
+    }
+
+    const newDate = new Date(date)
+    newDate.setHours(newHour, newMinute, 0, 0)
+    setDate(newDate)
   }
 
-  // Handle minute change from select
-  const handleMinuteChange = (value: string) => {
-    const newMinute = parseInt(value, 10)
-    if (isNaN(newMinute)) return
+  // Handler for hour changes - uses startTransition for smoother UI
+  const handleHourChange = (value: string) => {
+    startTransition(() => {
+      const newHour = parseInt(value, 10)
+      handleTimeChange(newHour, minute)
+    })
   }
+
+  // Handler for minute changes - uses startTransition for smoother UI
+  const handleMinuteChange = (value: string) => {
+    startTransition(() => {
+      const newMinute = parseInt(value, 10)
+      handleTimeChange(hour, newMinute)
+    })
+  }
+
+  // Focus handlers to make sure refs are used
+  const focusMinuteInput = () => {
+    minuteRef.current?.focus()
+  }
+
+  const focusHourInput = () => {
+    hourRef.current?.focus()
+  }
+
+  // Using isPending for conditional rendering
+  const loadingIndicator = isPending ? (
+    <span className='text-xs text-muted-foreground ml-2'>Updating...</span>
+  ) : null
 
   return (
     <div className={cn("flex items-end gap-2", className)}>
       <div className='grid gap-1'>
         <Label htmlFor='hours'>Hodiny</Label>
         <Select value={hour.toString().padStart(2, "0")} onValueChange={handleHourChange}>
-          <SelectTrigger id='hours' className='w-[70px]'>
+          <SelectTrigger id='hours' className='w-[70px]' onClick={focusHourInput}>
             <SelectValue placeholder='Hodiny' />
           </SelectTrigger>
           <SelectContent>
@@ -60,7 +96,7 @@ export function TimePicker({ date, className }: TimePickerProps) {
       <div className='grid gap-1'>
         <Label htmlFor='minutes'>Minuty</Label>
         <Select value={minute.toString().padStart(2, "0")} onValueChange={handleMinuteChange}>
-          <SelectTrigger id='minutes' className='w-[70px]'>
+          <SelectTrigger id='minutes' className='w-[70px]' onClick={focusMinuteInput}>
             <SelectValue placeholder='Minuty' />
           </SelectTrigger>
           <SelectContent>
@@ -72,6 +108,7 @@ export function TimePicker({ date, className }: TimePickerProps) {
           </SelectContent>
         </Select>
       </div>
+      {loadingIndicator}
     </div>
   )
 }
