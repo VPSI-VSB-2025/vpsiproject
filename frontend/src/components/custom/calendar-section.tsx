@@ -15,195 +15,52 @@ import {
 } from "@/components/ui/select"
 import React, { useCallback, useEffect, useState } from "react"
 import ContainerSection from "./container-section"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 import { Doctor } from "@/types/doctor"
-
 import { Appointment } from "@/types/appointment"
-
 import { formatDateToCzech } from "@/utils/helper"
 import { useForm } from "@tanstack/react-form"
-
-// const fetchDoctors = async (): Promise<Doctor[]> => {
-//   return axios
-//     .get("https://vpsiproject.onrender.com/doctors")
-//     .then((response) => {
-//       console.log("Fetched doctors:", response.data)
-//       return response.data
-//     })
-//     .catch((error: AxiosError) => {
-//       console.error("Error fetching doctors:", error)
-//       return []
-//     })
-// }
-
-const doctors: Doctor[] = [
-  {
-    name: "Ing. MBA, Prof. Dominik",
-    surname: "Wojnar (Miliardar)",
-    email: "king.wojnys@seznam.com",
-    phone_number: "000 000 007",
-    specialization: 1,
-    id: 1,
-  },
-  {
-    name: "Dr. Sarah",
-    surname: "Johnson",
-    email: "sarah.johnson@hospital.com",
-    phone_number: "123 456 789",
-    specialization: 2,
-    id: 10,
-  },
-  {
-    name: "Dr. Michael",
-    surname: "Chen",
-    email: "michael.chen@hospital.com",
-    phone_number: "987 654 321",
-    specialization: 3,
-    id: 2,
-  },
-  {
-    name: "Dr. Emily",
-    surname: "Rodriguez",
-    email: "emily.rodriguez@hospital.com",
-    phone_number: "456 789 123",
-    specialization: 4,
-    id: 3,
-  },
-  {
-    name: "Dr. James",
-    surname: "Wilson",
-    email: "james.wilson@hospital.com",
-    phone_number: "321 654 987",
-    specialization: 5,
-    id: 4,
-  },
-  {
-    name: "Dr. Aisha",
-    surname: "Patel",
-    email: "aisha.patel@hospital.com",
-    phone_number: "654 321 789",
-    specialization: 6,
-    id: 5,
-  },
-]
-
-const doctorAppointsmentApi: Appointment[] = [
-  {
-    id: 1,
-    doctor_id: 1,
-    event_type: "Consultation",
-    start_date_time: "2025-03-29T14:00:00Z",
-    end_date_time: "2025-03-29T14:15:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T10:00:00",
-  },
-  {
-    id: 2,
-    doctor_id: 1,
-    event_type: "Follow-up",
-    start_date_time: "2025-03-29T11:00:00Z",
-    end_date_time: "2025-03-29T11:15:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T10:15:00",
-  },
-  {
-    id: 3,
-    doctor_id: 1,
-    event_type: "Routine Checkup",
-    start_date_time: "2025-03-29T12:30:00Z",
-    end_date_time: "2025-03-29T13:00:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T10:30:00",
-  },
-  {
-    id: 4,
-    doctor_id: 1,
-    event_type: "Emergency",
-    start_date_time: "2025-03-29T13:00:00Z",
-    end_date_time: "2025-03-29T13:15:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T10:45:00",
-  },
-  {
-    id: 5,
-    doctor_id: 4,
-    event_type: "Consultation",
-    start_date_time: "2025-03-29T13:15:00Z",
-    end_date_time: "2025-03-29T13:45:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T11:00:00",
-  },
-  {
-    id: 52,
-    doctor_id: 1,
-    event_type: "Consultation",
-    start_date_time: "2025-03-29T13:15:00Z",
-    end_date_time: "2025-03-29T13:45:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T11:00:00",
-  },
-  {
-    id: 522,
-    doctor_id: 1,
-    event_type: "Consultation",
-    start_date_time: "2025-03-28T13:15:00Z",
-    end_date_time: "2025-03-28T13:45:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T11:00:00",
-  },
-  {
-    id: 521,
-    doctor_id: 2,
-    event_type: "Consultation",
-    start_date_time: "2025-03-29T13:15:00Z",
-    end_date_time: "2025-03-29T13:45:00Z",
-    status: "With Registration",
-    mandatory_registration: true,
-    created_at: "2025-03-27T11:00:00",
-  },
-  {
-    id: 5211,
-    doctor_id: 2,
-    event_type: "Consultation",
-    start_date_time: "2025-03-29T16:15:00Z",
-    end_date_time: "2025-03-29T18:45:00Z",
-    status: "Public",
-    mandatory_registration: false,
-    created_at: "2025-03-27T11:00:00",
-  },
-  {
-    id: 52111,
-    doctor_id: 1,
-    event_type: "Consultation",
-    start_date_time: "2025-03-30T10:00:00Z",
-    end_date_time: "2025-03-30T15:00:00Z",
-    status: "Public",
-    mandatory_registration: false,
-    created_at: "2025-03-27T11:00:00",
-  },
-  {
-    id: 521111,
-    doctor_id: 1,
-    event_type: "Consultation",
-    start_date_time: "2025-03-30T05:00:00Z",
-    end_date_time: "2025-03-30T07:00:00Z",
-    status: "Public",
-    mandatory_registration: false,
-    created_at: "2025-03-27T11:00:00",
-  },
-]
+import { fetchDoctors, fetchAppointments, createRequest } from "@/utils/api"
 
 const CalendarSection = () => {
   const [doctorFreeAppointments, setDoctorFreeAppointments] = useState<Appointment[]>([])
   const [date, setDate] = useState(new Date())
   const [doctorId, setDoctorId] = useState<number>(0)
+  const queryClient = useQueryClient()
+
+  // Fetch doctors from API
+  const { data: doctors = [], isLoading: isLoadingDoctors } = useQuery({
+    queryKey: ["doctors"],
+    queryFn: fetchDoctors,
+  })
+
+  // Fetch appointments for selected doctor and date
+  const { data: appointments = [], isLoading: isLoadingAppointments } = useQuery({
+    queryKey: ["appointments", doctorId, date.toISOString().split("T")[0]],
+    queryFn: () =>
+      fetchAppointments({
+        skip: 0,
+        limit: 100,
+      }),
+    enabled: !!doctorId,
+  })
+
+  // Create request mutation
+  const createRequestMutation = useMutation({
+    mutationFn: createRequest,
+    onSuccess: () => {
+      toast.success("Vaše žádost byla úspěšně odeslána")
+      queryClient.invalidateQueries({ queryKey: ["appointments"] })
+      queryClient.invalidateQueries({ queryKey: ["requests"] })
+      form.reset()
+    },
+    onError: (error) => {
+      toast.error("Nepodařilo se odeslat žádost")
+      console.error("Error creating request:", error)
+    },
+  })
 
   const form = useForm({
     defaultValues: {
@@ -215,46 +72,69 @@ const CalendarSection = () => {
       note: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("Form submitted with values:", value)
-      console.log(value)
+      if (!value.appointment_id || !value.doctor_id) {
+        toast.error("Vyberte lékaře a termín")
+        return
+      }
+
+      // Create a request object from form data
+      const requestData = {
+        patient_id: 0, // This would need to be created or fetched in a real app
+        type_id: 1, // Default consultation type
+        reason: value.note || "Konzultace",
+        status: "pending",
+        appointment_id: value.appointment_id,
+        patient_info: {
+          name: value.firstname,
+          surname: value.lastname,
+          phone_number: value.phone,
+        },
+      }
+
+      createRequestMutation.mutate(requestData as any)
     },
   })
 
   useEffect(() => {
-    fetchFreeTermsForDoctor()
-  }, [date, doctorId])
+    if (doctorId && date) {
+      fetchFreeTermsForDoctor()
+    }
+  }, [date, doctorId, appointments])
 
   const fetchFreeTermsForDoctor = () => {
-    const freeAppoint: Appointment[] = doctorAppointsmentApi
+    if (!appointments) return
+
+    const freeAppoint: Appointment[] = appointments
       .filter((appointment: Appointment) => {
         return (
           appointment.doctor_id === form.getFieldValue("doctor_id") &&
-          appointment.mandatory_registration === true &&
-          new Date(date).getDate() === new Date(appointment.start_date_time).getDate() &&
-          new Date(date).getMonth() === new Date(appointment.start_date_time).getMonth() &&
-          new Date(date).getFullYear() === new Date(appointment.start_date_time).getFullYear()
+          appointment.registration_mandatory === true &&
+          new Date(date).getDate() === new Date(appointment.date_from).getDate() &&
+          new Date(date).getMonth() === new Date(appointment.date_from).getMonth() &&
+          new Date(date).getFullYear() === new Date(appointment.date_from).getFullYear()
         )
       })
-      .sort((a, b) => new Date(a.start_date_time).getTime() - new Date(b.start_date_time).getTime())
+      .sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime())
 
     setDoctorFreeAppointments(freeAppoint)
   }
 
-  // i need to rewrite as useCallback
-
+  // Get public appointments (without registration required)
   const withoutRegistrationAppointments = useCallback(() => {
-    return doctorAppointsmentApi
+    if (!appointments) return []
+
+    return appointments
       .filter((appointment: Appointment) => {
-        const appointmentDate = new Date(appointment.start_date_time).toISOString().split("T")[0]
+        const appointmentDate = new Date(appointment.date_from).toISOString().split("T")[0]
         const selectedDate = date.toISOString().split("T")[0]
         return (
-          appointment.mandatory_registration === false &&
+          appointment.registration_mandatory === false &&
           appointmentDate === selectedDate &&
-          doctorId === appointment.doctor_id // Compare only the date part
+          doctorId === appointment.doctor_id
         )
       })
-      .sort((a, b) => new Date(a.start_date_time).getTime() - new Date(b.start_date_time).getTime())
-  }, [date, doctorId])
+      .sort((a, b) => new Date(a.date_from).getTime() - new Date(b.date_from).getTime())
+  }, [date, doctorId, appointments])
 
   return (
     <ContainerSection id='calendar' className='py-12 md:py-24 lg:py-32'>
@@ -295,7 +175,6 @@ const CalendarSection = () => {
                         name='doctor_id'
                         validators={{
                           onSubmit: ({ value }) => {
-                            console.log(value)
                             if (value === null) {
                               return "Vyberte lékaře"
                             }
@@ -308,16 +187,23 @@ const CalendarSection = () => {
                               field.handleChange(Number(value))
                               setDoctorId(Number(value))
                             }}
+                            disabled={isLoadingDoctors}
                           >
                             <SelectTrigger id='doctor'>
                               <SelectValue placeholder='Zvolte lékaře' />
                             </SelectTrigger>
                             <SelectContent>
-                              {doctors.map((doctor: Doctor) => (
-                                <SelectItem key={doctor.id} value={String(doctor.id)}>
-                                  {doctor.name} {doctor.surname} - {doctor.specialization}
+                              {isLoadingDoctors ? (
+                                <SelectItem value='loading' disabled>
+                                  Načítání lékařů...
                                 </SelectItem>
-                              ))}
+                              ) : (
+                                doctors.map((doctor: Doctor) => (
+                                  <SelectItem key={doctor.id} value={String(doctor.id)}>
+                                    {doctor.name} {doctor.surname} - {doctor.specialization}
+                                  </SelectItem>
+                                ))
+                              )}
                             </SelectContent>
                             <p className='text-red-500'>
                               {field.state.meta.errors.length ? (
@@ -337,71 +223,71 @@ const CalendarSection = () => {
                             selected={date}
                             onSelect={(day: Date | undefined) => day && setDate(day)}
                             className='rounded-md border w-1/3 p-3 max-h-[330px] gap-4'
+                            disabled={(date) => date < new Date()} // Disable past dates
                           />
                           <Card className='w-2/3 p-3 '>
-                            <div className='max-h-[300px] overflow-y-auto  flex flex-row flex-wrap gap-4 w-full'>
-                              {doctorFreeAppointments.length === 0 && (
+                            <div className='max-h-[300px] overflow-y-auto flex flex-row flex-wrap gap-4 w-full'>
+                              {isLoadingAppointments ? (
+                                <p className='text-center w-full'>Načítání termínů...</p>
+                              ) : doctorFreeAppointments.length === 0 ? (
                                 <p className='text-gray-500'>
                                   Žádné volné termíny, nebo nemáte vybraného doktora
                                 </p>
-                              )}
-
-                              {doctorFreeAppointments.map((term: Appointment) => (
-                                <form.Field
-                                  key={term.id}
-                                  name='appointment_id'
-                                  validators={{
-                                    onSubmit: ({ value }) => {
-                                      if (value === null) {
-                                        return "Vybrat termín je povinné"
-                                      }
-                                    },
-                                  }}
-                                >
-                                  {(field) => (
-                                    <div
-                                      className={`border p-4 rounded-lg cursor-pointer transition-all duration-200
-                                 ${
-                                   field.state.value === term.id
-                                     ? "border-2 border-blue-500 bg-blue-100 shadow-lg"
-                                     : "hover:bg-gray-100"
-                                 }`}
-                                      onClick={() => {
-                                        field.handleChange(term.id) // Update form state
-                                      }}
-                                    >
-                                      <p className='font-semibold text-green-500'>
-                                        Od: {formatDateToCzech(term.start_date_time)}
-                                      </p>
-                                      <p className='text-red-500'>
-                                        Do: {formatDateToCzech(term.end_date_time)}
-                                      </p>
-                                      {/* Hidden radio input for form accessibility */}
-                                      <input
-                                        type='radio'
-                                        name='appointment'
-                                        value={term.id}
-                                        checked={field.state.value === term.id}
-                                        onChange={(e) => {
-                                          const id = Number(e.target.value)
-                                          field.handleChange(id)
+                              ) : (
+                                doctorFreeAppointments.map((term: Appointment) => (
+                                  <form.Field
+                                    key={term.id}
+                                    name='appointment_id'
+                                    validators={{
+                                      onSubmit: ({ value }) => {
+                                        if (value === null) {
+                                          return "Vybrat termín je povinné"
+                                        }
+                                      },
+                                    }}
+                                  >
+                                    {(field) => (
+                                      <div
+                                        className={`border p-4 rounded-lg cursor-pointer transition-all duration-200
+                                     ${
+                                       field.state.value === term.id
+                                         ? "border-2 border-blue-500 bg-blue-100 shadow-lg"
+                                         : "hover:bg-gray-100"
+                                     }`}
+                                        onClick={() => {
+                                          field.handleChange(term.id) // Update form state
                                         }}
-                                        className='hidden' // Hide the default radio button
-                                      />
-                                      {field.state.meta.errors.length > 0 && (
-                                        <p className='text-red-500 text-sm mt-1'>
-                                          <em>{field.state.meta.errors.join(", ")}</em>
+                                      >
+                                        <p className='font-semibold text-green-500'>
+                                          Od: {formatDateToCzech(term.date_from)}
                                         </p>
-                                      )}
-                                    </div>
-                                  )}
-                                </form.Field>
-                              ))}
+                                        <p className='text-red-500'>
+                                          Do: {formatDateToCzech(term.date_to)}
+                                        </p>
+                                        <input
+                                          type='radio'
+                                          name='appointment'
+                                          value={term.id}
+                                          checked={field.state.value === term.id}
+                                          onChange={(e) => {
+                                            const id = Number(e.target.value)
+                                            field.handleChange(id)
+                                          }}
+                                          className='hidden' // Hide the default radio button
+                                        />
+                                        {field.state.meta.errors.length > 0 && (
+                                          <p className='text-red-500 text-sm mt-1'>
+                                            <em>{field.state.meta.errors.join(", ")}</em>
+                                          </p>
+                                        )}
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                ))
+                              )}
                             </div>
                           </Card>
                         </div>
-
-                        {/* <AppointmentCalendar doctorFreeAppointments={doctorFreeAppointments} /> */}
                       </div>
                     </div>
                     <div className='space-y-2'>
@@ -516,8 +402,13 @@ const CalendarSection = () => {
                 </CardContent>
               </form>
               <CardFooter>
-                <Button className='w-full' onClick={form.handleSubmit} type='submit'>
-                  Zarezervujte si termín
+                <Button
+                  className='w-full'
+                  onClick={form.handleSubmit}
+                  type='submit'
+                  disabled={createRequestMutation.isPending}
+                >
+                  {createRequestMutation.isPending ? "Odesílání..." : "Zarezervujte si termín"}
                 </Button>
               </CardFooter>
             </Card>
@@ -532,16 +423,23 @@ const CalendarSection = () => {
                       onValueChange={(value) => {
                         setDoctorId(Number(value))
                       }}
+                      disabled={isLoadingDoctors}
                     >
                       <SelectTrigger id='doctor'>
                         <SelectValue placeholder='Zvolte lékaře' />
                       </SelectTrigger>
                       <SelectContent>
-                        {doctors.map((doctor: Doctor) => (
-                          <SelectItem key={doctor.id} value={String(doctor.id)}>
-                            {doctor.name} {doctor.surname} - {doctor.specialization}
+                        {isLoadingDoctors ? (
+                          <SelectItem value='loading' disabled>
+                            Načítání lékařů...
                           </SelectItem>
-                        ))}
+                        ) : (
+                          doctors.map((doctor: Doctor) => (
+                            <SelectItem key={doctor.id} value={String(doctor.id)}>
+                              {doctor.name} {doctor.surname} - {doctor.specialization}
+                            </SelectItem>
+                          ))
+                        )}
                       </SelectContent>
                     </Select>
                     <div className='w-full'>
@@ -553,17 +451,23 @@ const CalendarSection = () => {
                           className='rounded-md border p-3 max-h-[330px] gap-4'
                         />
 
-                        <div className='w-full '>
-                          {withoutRegistrationAppointments().map((term: Appointment) => (
-                            <div key={term.id} className='border p-4 my-4 rounded-md'>
-                              <p className='text-green-500'>
-                                od {formatDateToCzech(term.start_date_time)}
-                              </p>
-                              <p className='text-red-500'>
-                                do {formatDateToCzech(term.end_date_time)}
-                              </p>
+                        <div className='w-full'>
+                          {isLoadingAppointments ? (
+                            <div className='text-center py-4'>Načítání termínů...</div>
+                          ) : withoutRegistrationAppointments().length === 0 ? (
+                            <div className='text-center py-4'>
+                              Žádné dostupné termíny bez registrace
                             </div>
-                          ))}
+                          ) : (
+                            withoutRegistrationAppointments().map((term: Appointment) => (
+                              <div key={term.id} className='border p-4 my-4 rounded-md'>
+                                <p className='text-green-500'>
+                                  od {formatDateToCzech(term.date_from)}
+                                </p>
+                                <p className='text-red-500'>do {formatDateToCzech(term.date_to)}</p>
+                              </div>
+                            ))
+                          )}
                         </div>
                       </Card>
                     </div>
@@ -579,36 +483,3 @@ const CalendarSection = () => {
 }
 
 export default CalendarSection
-
-// interface AppointmentCalendarProps {
-//   doctorFreeAppointments: Appointment[]
-// }
-
-// const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({ doctorFreeAppointments }) => {
-//   const [date, setDate] = useState(new Date())
-//   console.log(date)
-//   const [time, setTime] = useState<string>("")
-
-//   return (
-//     <div className='space-y-4 flex justify-between items-center'>
-//       <Calendar
-//         mode='single'
-//         selected={date}
-//         onSelect={(day: Date | undefined) => day && setDate(day)}
-//         className='rounded-md border w-1/2 '
-//       />
-//       <Card className='w-1/2'>
-//         <div>
-//           {doctorFreeAppointments.length === 0 && <p>Žádné volné termíny</p>}
-//           {doctorFreeAppointments.map((term: Appointment) => (
-//             <div key={term.id} className='border p-4 rounded-md'>
-//               <p>od {formatDateToCzech(term.start_date_time)}</p>
-//               <p>do {formatDateToCzech(term.end_date_time)}</p>
-//               <input type='radio' name='term' value={term.id} />
-//             </div>
-//           ))}
-//         </div>
-//       </Card>
-//     </div>
-//   )
-// }

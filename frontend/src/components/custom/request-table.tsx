@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -14,6 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -37,6 +38,8 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
+import { fetchRequests, updateRequestStatus, fetchPatients } from "@/utils/api"
 
 interface RequestsTableProps {
   userRole: "doctor" | "nurse"
@@ -57,73 +60,93 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
 
-  // Mock data
-  const data: PatientRequest[] = [
-    {
-      id: "ZAD-001",
-      patientName: "Jan Novák",
-      date: "25.03.2024",
-      time: "09:00",
-      reason: "Roční prohlídka",
-      status: "pending",
-    },
-    {
-      id: "ZAD-002",
-      patientName: "Jana Svobodová",
-      date: "25.03.2024",
-      time: "10:30",
-      reason: "Kontrola",
-      status: "approved",
-    },
-    {
-      id: "ZAD-003",
-      patientName: "Robert Dvořák",
-      date: "26.03.2024",
-      time: "11:45",
-      reason: "Výsledky krevních testů",
-      status: "completed",
-    },
-    {
-      id: "ZAD-004",
-      patientName: "Eliška Nováková",
-      date: "26.03.2024",
-      time: "13:15",
-      reason: "Očkování",
-      status: "declined",
-    },
-    {
-      id: "ZAD-005",
-      patientName: "Michal Černý",
-      date: "27.03.2024",
-      time: "14:30",
-      reason: "Konzultace",
-      status: "pending",
-    },
-    {
-      id: "ZAD-006",
-      patientName: "Sára Veselá",
-      date: "27.03.2024",
-      time: "15:45",
-      reason: "Obnovení receptu",
-      status: "pending",
-    },
-    {
-      id: "ZAD-007",
-      patientName: "David Malý",
-      date: "28.03.2024",
-      time: "09:30",
-      reason: "Výsledky rentgenu",
-      status: "approved",
-    },
-    {
-      id: "ZAD-008",
-      patientName: "Lucie Tichá",
-      date: "28.03.2024",
-      time: "11:00",
-      reason: "Test na alergie",
-      status: "pending",
-    },
-  ]
+  // Fetch requests and patients data
+  const {
+    data: requestsData,
+    isLoading: isLoadingRequests,
+    refetch,
+  } = useQuery({
+    queryKey: ["requests"],
+    queryFn: () => fetchRequests(),
+  })
+
+  const { data: patientsData, isLoading: isLoadingPatients } = useQuery({
+    queryKey: ["patients"],
+    queryFn: () => fetchPatients(),
+  })
+
+  // Format the data for the table when API data changes
+  const [data, setData] = useState<PatientRequest[]>([])
+
+  useEffect(() => {
+    if (!requestsData || !patientsData) return
+
+    // Map the API data to the format expected by the table
+    const formattedData = requestsData.map((request) => {
+      // Find the patient associated with this request
+      const patient = patientsData.find((p) => p.id === request.patient_id) || {
+        name: "Unknown",
+        surname: "Patient",
+      }
+
+      // Extract date and time from the request timestamp
+      const requestDate = new Date(request.created_at || new Date())
+      const dateString = requestDate.toLocaleDateString("cs-CZ")
+      const timeString = requestDate.toLocaleTimeString("cs-CZ", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+
+      return {
+        id: request.id.toString(),
+        patientName: `${patient.name} ${patient.surname}`,
+        date: dateString,
+        time: timeString,
+        reason: request.reason || request.type || "Konzultace",
+        status: (request.status?.toLowerCase() || "pending") as
+          | "pending"
+          | "approved"
+          | "declined"
+          | "completed",
+      }
+    })
+
+    setData(formattedData)
+  }, [requestsData, patientsData])
+
+  // Handle request actions
+  const handleApproveRequest = async (id: string) => {
+    try {
+      await updateRequestStatus(Number(id), "approved")
+      toast.success("Žádost byla schválena")
+      refetch()
+    } catch (error) {
+      toast.error("Nepodařilo se schválit žádost")
+      console.error("Error approving request:", error)
+    }
+  }
+
+  const handleRejectRequest = async (id: string) => {
+    try {
+      await updateRequestStatus(Number(id), "declined")
+      toast.success("Žádost byla odmítnuta")
+      refetch()
+    } catch (error) {
+      toast.error("Nepodařilo se odmítnout žádost")
+      console.error("Error rejecting request:", error)
+    }
+  }
+
+  const handleCompleteRequest = async (id: string) => {
+    try {
+      await updateRequestStatus(Number(id), "completed")
+      toast.success("Žádost byla označena jako dokončená")
+      refetch()
+    } catch (error) {
+      toast.error("Nepodařilo se označit žádost jako dokončenou")
+      console.error("Error completing request:", error)
+    }
+  }
 
   const columns: ColumnDef<PatientRequest>[] = [
     {
@@ -235,13 +258,19 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Zobrazit detaily pacienta</DropdownMenuItem>
               {canModify && request.status === "pending" && (
-                <DropdownMenuItem>Schválit žádost</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleApproveRequest(request.id)}>
+                  Schválit žádost
+                </DropdownMenuItem>
               )}
               {userRole === "doctor" && request.status === "pending" && (
-                <DropdownMenuItem>Zamítnout žádost</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleRejectRequest(request.id)}>
+                  Zamítnout žádost
+                </DropdownMenuItem>
               )}
               {userRole === "doctor" && request.status === "approved" && (
-                <DropdownMenuItem>Označit jako dokončené</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleCompleteRequest(request.id)}>
+                  Označit jako dokončené
+                </DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -268,6 +297,11 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
       rowSelection,
     },
   })
+
+  // Show loading state
+  if (isLoadingRequests || isLoadingPatients) {
+    return <div className='flex justify-center p-8'>Načítání žádostí pacientů...</div>
+  }
 
   return (
     <div className='space-y-4'>
@@ -303,7 +337,27 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          {userRole === "doctor" && <Button variant='default'>Zpracovat vybrané</Button>}
+          {userRole === "doctor" && (
+            <Button
+              variant='default'
+              onClick={() => {
+                const selectedRows = table.getFilteredSelectedRowModel().rows
+                if (selectedRows.length === 0) {
+                  toast.info("Není vybrána žádná žádost")
+                  return
+                }
+
+                // Process all selected requests
+                Promise.all(selectedRows.map((row) => handleApproveRequest(row.original.id))).then(
+                  () => {
+                    toast.success(`${selectedRows.length} žádostí bylo zpracováno`)
+                  }
+                )
+              }}
+            >
+              Zpracovat vybrané
+            </Button>
+          )}
         </div>
       </div>
       <div className='rounded-md border'>
