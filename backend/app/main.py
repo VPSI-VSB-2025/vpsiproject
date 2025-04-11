@@ -11,6 +11,7 @@ from app.api.list_all_terms import router as all_terms_router
 from app.api.appointments import router as appointments_router
 from app.api.requests import router as requests_router
 from app.api.request_types import router as request_types_router
+from app.api.book_term import router as book_term_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -39,6 +40,7 @@ app.include_router(all_terms_router, prefix="/api/terms", tags=["Terms"])
 app.include_router(appointments_router, prefix="/appointments", tags=["Appointments"])
 app.include_router(requests_router, prefix="/requests", tags=["Requests"])
 app.include_router(request_types_router, prefix="/request_types", tags=["Request Types"])
+app.include_router(book_term_router, prefix="/api/terms", tags=["Terms"])
 
 if __name__ == "__main__":
     import uvicorn

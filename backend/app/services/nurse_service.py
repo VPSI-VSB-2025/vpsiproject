@@ -23,6 +23,10 @@ class NurseService:
         return db.query(Nurse).offset(skip).limit(limit).all()
 
     @staticmethod
+    def get_nurse_by_doctor_id(db: Session, doctor_id: int):
+        return db.query(Nurse).filter(Nurse.doctor_id == doctor_id).first()
+
+    @staticmethod
     def update_nurse(db: Session, nurse_id: int, nurse: NurseCreate):
         db_nurse = NurseService.get_nurse(db, nurse_id)
         if db_nurse:

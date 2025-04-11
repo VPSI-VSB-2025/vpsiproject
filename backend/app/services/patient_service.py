@@ -16,6 +16,10 @@ class PatientService:
         return db.query(Patient).filter(Patient.id == patient_id).first()
 
     @staticmethod
+    def get_patient_by_pn(db: Session, personal_number: str):
+        return db.query(Patient).filter(Patient.personal_number == personal_number).first()
+
+    @staticmethod
     def get_patients(db: Session, skip: int = 0, limit: int = 100):
         return db.query(Patient).offset(skip).limit(limit).all()
 
