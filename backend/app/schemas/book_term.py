@@ -13,4 +13,3 @@ class BookTermBase(BaseModel):
 
 class BookTermOut(BaseModel):
     message: str
-

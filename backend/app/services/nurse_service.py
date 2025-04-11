@@ -21,7 +21,7 @@ class NurseService:
     @staticmethod
     def get_nurses(db: Session, skip: int = 0, limit: int = 100):
         return db.query(Nurse).offset(skip).limit(limit).all()
-    
+
     @staticmethod
     def get_nurse_by_doctor_id(db: Session, doctor_id: int):
         return db.query(Nurse).filter(Nurse.doctor_id == doctor_id).first()

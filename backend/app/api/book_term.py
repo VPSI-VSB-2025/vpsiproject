@@ -6,7 +6,6 @@ from app.services.nurse_service import NurseService
 from app.services.request_service import RequestService
 from app.services.appointment_service import AppointmentService
 from app.services.request_type_service import RequestTypeService
-from app.services.patient_service import PatientService
 from app.models.request import Request
 from app.models.patient import Patient
 from app.schemas.book_term import BookTermBase, BookTermOut
@@ -67,16 +66,16 @@ def book_term(request: BookTermBase, db: Session = Depends(get_db)):
             description=request.description
         )
 
-        db.add(new_request) 
+        db.add(new_request)
 
         db.commit()
 
-        db.refresh(new_request)  
-        db.refresh(patient) 
+        db.refresh(new_request)
+        db.refresh(patient)
 
         return {"message": "OK, created"}
 
     except Exception as e:
-        db.rollback() 
+        db.rollback()
         logging.error(f"Error occurred while booking term: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred. Check server logs for details.")
