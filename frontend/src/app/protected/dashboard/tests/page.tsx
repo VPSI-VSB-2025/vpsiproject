@@ -32,11 +32,11 @@ export default function TestsPage() {
   return (
     <DashboardShell>
       <div className='flex items-center justify-between mb-6'>
-        <h1 className='text-2xl font-bold'>Test Results</h1>
+        <h1 className='text-2xl font-bold'>Výsledky testů</h1>
         {/* Wrap the Button in the Dialog component */}
         <TestDialog>
           <Button>
-            <PlusCircle className='mr-2 h-4 w-4' /> Create New Test Result
+            <PlusCircle className='mr-2 h-4 w-4' /> Nový výsledek testu
           </Button>
         </TestDialog>
       </div>
