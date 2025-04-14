@@ -21,7 +21,7 @@ def create_request(request: RequestCreate, db: Session = Depends(get_db)):
 @router.put("/{request_id}", response_model=RequestOut)
 def update_request(
     request_id: int,
-    request_update: RequestUpdate, # Use the new RequestUpdate schema
+    request_update: RequestUpdate,  # Use the new RequestUpdate schema
     db: Session = Depends(get_db)
 ):
     db_request = RequestService.update_request_status(

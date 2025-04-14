@@ -11,4 +11,3 @@ class TestTypeOut(SQLModel):
 class TestTypeCreate(SQLModel):
     name: str
     description: Optional[str] = None
-

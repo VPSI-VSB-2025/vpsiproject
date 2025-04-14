@@ -58,7 +58,7 @@ def update_test_endpoint(
     """Endpoint to update an existing test result."""
     # Use TestService class
     updated_test = TestService.update_test(db=db, test_id=test_id, test_update_data=test_update_data)
-    if updated_test is None: # Should be handled by service, but double-check
+    if updated_test is None:  # Should be handled by service, but double-check
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Test not found")
     return updated_test
 
@@ -71,4 +71,4 @@ def delete_test_endpoint(
     """Endpoint to delete a test result."""
     # Use TestService class
     TestService.delete_test(db=db, test_id=test_id)
-    return # Return None with 204 status code
+    return  # Return None with 204 status code

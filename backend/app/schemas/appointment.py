@@ -30,4 +30,4 @@ class AppointmentOut(AppointmentBase):
     # requests: List[RequestOut] = [] # Adjust based on actual RequestOut schema
 
     class Config:
-        from_attributes = True # Changed from orm_mode
+        from_attributes = True

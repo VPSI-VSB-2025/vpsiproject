@@ -25,4 +25,4 @@ class TestOut(TestBase):
     created_at: datetime
 
     class Config:
-        from_attributes = True # Replaced orm_mode = True
+        from_attributes = True
