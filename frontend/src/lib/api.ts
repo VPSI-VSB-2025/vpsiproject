@@ -69,7 +69,7 @@ export interface TestCreateData {
 }
 
 // --- Existing API Client Setup ---
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://vpsiproject.onrender.com"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
