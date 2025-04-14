@@ -46,7 +46,7 @@ import { useRouter } from "next/navigation"
 
 const fetchSpecializations = async (): Promise<Specialization[]> => {
   return axios
-    .get("http://localhost:8000/specializations/")
+    .get("https://vpsiproject.onrender.com/specializations/")
     .then((response) => {
       return response.data
     })
@@ -58,7 +58,7 @@ const fetchSpecializations = async (): Promise<Specialization[]> => {
 
 const fetchDoctors = async (): Promise<Doctor[]> => {
   return axios
-    .get("http://localhost:8000/doctors")
+    .get("https://vpsiproject.onrender.com/doctors")
     .then((response) => {
       return response.data
     })
@@ -70,7 +70,7 @@ const fetchDoctors = async (): Promise<Doctor[]> => {
 
 const fetchNurses = async (): Promise<Nurse[]> => {
   return axios
-    .get("http://localhost:8000/nurses")
+    .get("https://vpsiproject.onrender.com/nurses")
     .then((response) => {
       return response.data
     })
@@ -82,7 +82,7 @@ const fetchNurses = async (): Promise<Nurse[]> => {
 
 const addSpecialization = async (name: string) => {
   return axios
-    .post("http://localhost:8000/specializations/", { name })
+    .post("https://vpsiproject.onrender.com/specializations/", { name })
     .then((response) => {
       return response.data
     })
@@ -160,7 +160,7 @@ export default function RoleSelectionForm() {
   const { data } = useQuery(specializationQueryOptions)
 
   const addDoctor = async (values: z.infer<typeof formSchema>) => {
-    return axios.post("http://localhost:8000/doctors/", {
+    return axios.post("https://vpsiproject.onrender.com/doctors/", {
       name: user?.firstName,
       surname: user?.lastName,
       email: user?.emailAddresses[0].emailAddress,
@@ -170,7 +170,7 @@ export default function RoleSelectionForm() {
   }
 
   const addNurse = async (values: z.infer<typeof formSchema>) => {
-    return axios.post("http://localhost:8000/nurses/", {
+    return axios.post("https://vpsiproject.onrender.com/nurses/", {
       name: user?.firstName,
       surname: user?.lastName,
       email: user?.emailAddresses[0].emailAddress,
