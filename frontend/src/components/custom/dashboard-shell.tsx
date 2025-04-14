@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { usePathname } from "next/navigation"
 
 import {
   Sidebar,
@@ -18,12 +19,16 @@ import {
 import { Calendar, FileText, Home, LogOut, Settings, User, Users } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { SignOutButton, useUser } from "@clerk/nextjs"
 
 interface DashboardShellProps {
   children: React.ReactNode
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
+  const { user } = useUser()
+  const pathname = usePathname() // Get current path
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -47,50 +52,20 @@ export function DashboardShell({ children }: DashboardShellProps) {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive>
-                <a href='/dashboard'>
+              {/* Keep Přehled */}
+              <SidebarMenuButton asChild isActive={pathname === "/dashboard"}>
+                <a href='/protected/dashboard'>
                   <Home className='h-4 w-4' />
                   <span>Přehled</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            {/* Add Testy */}
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href='/dashboard/appointments'>
-                  <Calendar className='h-4 w-4' />
-                  <span>Termíny</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href='/dashboard/requests'>
-                  <FileText className='h-4 w-4' />
-                  <span>Žádosti pacientů</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href='/dashboard/patients'>
-                  <Users className='h-4 w-4' />
-                  <span>Pacienti</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href='/dashboard/profile'>
-                  <User className='h-4 w-4' />
-                  <span>Profil</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href='/dashboard/settings'>
-                  <Settings className='h-4 w-4' />
-                  <span>Nastavení</span>
+              <SidebarMenuButton asChild isActive={pathname === "/protected/dashboard/tests"}>
+                <a href='/protected/dashboard/tests'>
+                  <FileText className='h-4 w-4' /> {/* Using FileText icon, change if needed */}
+                  <span>Testy</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -98,27 +73,37 @@ export function DashboardShell({ children }: DashboardShellProps) {
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenu>
+            {/* Keep User Info if needed, or simplify */}
             <SidebarMenuItem>
               <SidebarMenuButton>
                 <Avatar className='h-5 w-5'>
-                  <AvatarImage src='/placeholder-user.jpg' alt='Dr. Smith' />
-                  <AvatarFallback>DS</AvatarFallback>
+                  <AvatarImage
+                    src={user?.imageUrl || "/placeholder-user.jpg"}
+                    alt={user?.fullName || "User"}
+                  />
+                  <AvatarFallback>
+                    {user?.firstName?.[0]}
+                    {user?.lastName?.[0]}
+                  </AvatarFallback>
                 </Avatar>
-                <span>Dr. Smith</span>
+                <span>{user?.fullName || "Uživatel"}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            {/* Keep Logout */}
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href='/logout'>
+              {/* Ensure Clerk's SignOutButton has asChild when wrapping SidebarMenuButton */}
+              <SignOutButton redirectUrl='/'>
+                <SidebarMenuButton>
                   <LogOut className='h-4 w-4' />
                   <span>Odhlásit se</span>
-                </a>
-              </SidebarMenuButton>
+                </SidebarMenuButton>
+              </SignOutButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
+
       <SidebarInset>
         <header className='sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6'>
           <SidebarTrigger />

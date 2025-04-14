@@ -19,6 +19,7 @@ class PatientOut(BaseModel):
     id: int
     name: str
     surname: str
+    email: Optional[str] = None
     date_of_birth: Optional[date] = None
     sex: Optional[str] = Field(default=None, max_length=1, description="Single character: 'M' for male, 'F' for female, 'O' for other")
     address: Optional[str] = None
@@ -26,4 +27,4 @@ class PatientOut(BaseModel):
     personal_number: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

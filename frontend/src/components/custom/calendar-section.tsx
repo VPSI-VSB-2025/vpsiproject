@@ -33,6 +33,8 @@ import {
   createPatient,
 } from "@/utils/api"
 import { Specialization } from "@/types/specialization"
+import { Request } from "@/types/request" // Ensure Request type is imported
+import { fetchRequests } from "@/utils/api" // Ensure fetchRequests is imported
 
 const CalendarSection = () => {
   const [doctorFreeAppointments, setDoctorFreeAppointments] = useState<Appointment[]>([])
@@ -69,6 +71,13 @@ const CalendarSection = () => {
         limit: 100,
       }),
     enabled: !!doctorId,
+  })
+
+  // Fetch all requests to check for booked slots
+  const { data: allRequests = [], isLoading: isLoadingRequests } = useQuery<Request[]>({
+    // Specify type
+    queryKey: ["requests"],
+    queryFn: () => fetchRequests(),
   })
 
   // Create request mutation
@@ -324,63 +333,105 @@ const CalendarSection = () => {
                           />
                           <Card className='w-2/3 p-3 '>
                             <div className='max-h-[300px] overflow-y-auto flex flex-row flex-wrap gap-4 w-full'>
-                              {isLoadingAppointments ? (
+                              {isLoadingAppointments || isLoadingRequests ? ( // Check both loading states
                                 <p className='text-center w-full'>Načítání termínů...</p>
                               ) : doctorFreeAppointments.length === 0 ? (
                                 <p className='text-gray-500'>
                                   Žádné volné termíny, nebo nemáte vybraného doktora
                                 </p>
                               ) : (
-                                doctorFreeAppointments.map((term: Appointment) => (
-                                  <form.Field
-                                    key={term.id}
-                                    name='appointment_id'
-                                    validators={{
-                                      onSubmit: ({ value }) => {
-                                        if (value === null) {
-                                          return "Vybrat termín je povinné"
-                                        }
-                                      },
-                                    }}
-                                  >
-                                    {(field) => (
-                                      <div
-                                        className={`border p-4 rounded-lg cursor-pointer transition-all duration-200
-                                     ${
-                                       field.state.value === term.id
-                                         ? "border-2 border-blue-500 bg-blue-100 shadow-lg"
-                                         : "hover:bg-gray-100"
-                                     }`}
-                                        onClick={() => {
-                                          field.handleChange(term.id) // Update form state
-                                        }}
-                                      >
-                                        <p className='font-semibold text-green-500'>
-                                          Od: {formatDateToCzech(term.date_from)}
-                                        </p>
-                                        <p className='text-red-500'>
-                                          Do: {formatDateToCzech(term.date_to)}
-                                        </p>
-                                        <input
-                                          type='radio'
-                                          name='appointment'
-                                          value={term.id}
-                                          checked={field.state.value === term.id}
-                                          onChange={(e) => {
-                                            const id = Number(e.target.value)
-                                            field.handleChange(id)
+                                doctorFreeAppointments.map((term: Appointment) => {
+                                  // Check if this term is booked by finding a request with state 'pending' or 'approved'
+                                  const isBooked = allRequests.some(
+                                    (req) =>
+                                      req.appointment_id === term.id &&
+                                      (req.state === "pending" || req.state === "approved")
+                                  )
+
+                                  return (
+                                    <form.Field
+                                      key={term.id}
+                                      name='appointment_id'
+                                      validators={{
+                                        onSubmit: ({ value }) => {
+                                          if (value === null) {
+                                            return "Vybrat termín je povinné"
+                                          }
+                                          // Add validation to prevent submitting booked slots
+                                          const selectedIsBooked = allRequests.some(
+                                            (req) =>
+                                              req.appointment_id === value &&
+                                              (req.state === "pending" || req.state === "approved")
+                                          )
+                                          if (selectedIsBooked) {
+                                            return "Tento termín je již obsazený."
+                                          }
+                                        },
+                                      }}
+                                    >
+                                      {(field) => (
+                                        <div
+                                          className={`border p-4 rounded-lg transition-all duration-200
+                                           ${
+                                             field.state.value === term.id && !isBooked // Only highlight if not booked
+                                               ? "border-2 border-blue-500 bg-blue-100 shadow-lg"
+                                               : ""
+                                           }
+                                           ${
+                                             isBooked
+                                               ? "opacity-50 cursor-not-allowed bg-gray-200" // Gray out if booked
+                                               : "cursor-pointer hover:bg-gray-100" // Normal hover if not booked
+                                           }`}
+                                          onClick={() => {
+                                            if (!isBooked) {
+                                              // Only allow selection if not booked
+                                              field.handleChange(term.id) // Update form state
+                                            }
                                           }}
-                                          className='hidden' // Hide the default radio button
-                                        />
-                                        {field.state.meta.errors.length > 0 && (
-                                          <p className='text-red-500 text-sm mt-1'>
-                                            <em>{field.state.meta.errors.join(", ")}</em>
+                                        >
+                                          <p
+                                            className={`font-semibold ${
+                                              isBooked ? "text-gray-500" : "text-green-500"
+                                            }`}
+                                          >
+                                            Od: {formatDateToCzech(term.date_from)}
                                           </p>
-                                        )}
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                ))
+                                          <p
+                                            className={`${
+                                              isBooked ? "text-gray-500" : "text-red-500"
+                                            }`}
+                                          >
+                                            Do: {formatDateToCzech(term.date_to)}
+                                          </p>
+                                          {isBooked && (
+                                            <p className='text-xs text-gray-600 mt-1'>(Obsazeno)</p>
+                                          )}{" "}
+                                          {/* Indicate booked status */}
+                                          <input
+                                            type='radio'
+                                            name='appointment'
+                                            value={term.id}
+                                            checked={field.state.value === term.id}
+                                            onChange={(e) => {
+                                              if (!isBooked) {
+                                                // Prevent change if booked
+                                                const id = Number(e.target.value)
+                                                field.handleChange(id)
+                                              }
+                                            }}
+                                            className='hidden' // Hide the default radio button
+                                            disabled={isBooked} // Disable the hidden input too
+                                          />
+                                          {field.state.meta.errors.length > 0 && (
+                                            <p className='text-red-500 text-sm mt-1'>
+                                              <em>{field.state.meta.errors.join(", ")}</em>
+                                            </p>
+                                          )}
+                                        </div>
+                                      )}
+                                    </form.Field>
+                                  )
+                                })
                               )}
                             </div>
                           </Card>

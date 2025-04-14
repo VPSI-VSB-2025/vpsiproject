@@ -173,7 +173,7 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
     },
     {
       accessorKey: "id",
-      header: "ID žádosti",
+      header: "ID žádanky",
       cell: ({ row }) => <div className='font-medium'>{row.getValue("id")}</div>,
     },
     {
@@ -253,10 +253,9 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
             <DropdownMenuContent align='end'>
               <DropdownMenuLabel>Akce</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => navigator.clipboard.writeText(request.id)}>
-                Kopírovat ID žádosti
+                Kopírovat ID žádanky
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Zobrazit detaily pacienta</DropdownMenuItem>
               {canModify && request.status === "pending" && (
                 <DropdownMenuItem onClick={() => handleApproveRequest(request.id)}>
                   Schválit žádost
@@ -355,7 +354,7 @@ export function RequestsTable({ userRole }: RequestsTableProps) {
                 )
               }}
             >
-              Zpracovat vybrané
+              Schválit vybrané
             </Button>
           )}
         </div>

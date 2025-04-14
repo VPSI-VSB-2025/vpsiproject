@@ -1,14 +1,14 @@
-from pydantic import BaseModel
+from sqlmodel import SQLModel
+from typing import Optional
 
-class RequestType(BaseModel):
-    name: str
-    description: str
-
-class RequestCreate(RequestType):
-    pass
-
-class RequestOut(RequestType):
+# Schema for reading test type data (output)
+class TestTypeOut(SQLModel):
     id: int
+    name: str
+    description: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+# Schema for creating a test type
+class TestTypeCreate(SQLModel):
+    name: str
+    description: Optional[str] = None
+

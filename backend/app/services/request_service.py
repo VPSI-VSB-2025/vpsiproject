@@ -1,21 +1,8 @@
 from sqlalchemy.orm import Session
 from app.models.request import Request
-from app.models.patient import Patient
-from app.models.appointment import Appointment
 from app.schemas.request import RequestCreate
 
 class RequestService:
-    @staticmethod
-    def create_request(db: Session, request: RequestCreate):
-        # patient = db.query(Patient).filter(Patient.id == request.patient_id).first()
-        # appointment = db.query(Appointment).filter(Appointment.id == request.appointment_id).first()
-
-        db_request = Request(**request.model_dump())
-        db.add(db_request)
-        db.commit()
-        db.refresh(db_request)
-        return db_request
-
     @staticmethod
     def get_request(db: Session, request_id: int):
         return db.query(Request).filter(Request.id == request_id).first()
@@ -25,9 +12,19 @@ class RequestService:
         return db.query(Request).offset(skip).limit(limit).all()
 
     @staticmethod
-    def check_existing_request(db: Session, patient_id: int, appointment_id: int, doctor_id: int):
-        return db.query(Request).filter(
-            Request.patient_id == patient_id,
-            Request.appointment_id == appointment_id,
-            Request.doctor_id == doctor_id,
-        ).first()
+    def create_request(db: Session, request: RequestCreate):
+        db_request = Request(**request.model_dump())
+        db.add(db_request)
+        db.commit()
+        db.refresh(db_request)
+        return db_request
+
+    @staticmethod
+    def update_request_status(db: Session, request_id: int, new_state: str):
+        """Updates the state of a specific request."""
+        db_request = db.query(Request).filter(Request.id == request_id).first()
+        if db_request:
+            db_request.state = new_state
+            db.commit()
+            db.refresh(db_request)
+        return db_request

@@ -7,14 +7,13 @@ import { useEffect, useState } from "react"
 import { DashboardShell } from "@/components/custom/dashboard-shell"
 import { DashboardHeader } from "@/components/custom/dashboard-header"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, Clock, FileText, Plus, User } from "lucide-react"
+import { CalendarIcon, Clock, FileText, Plus } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AppointmentCalendar } from "@/components/custom/appointment-calendar"
 import { RequestsTable } from "@/components/custom/request-table"
 import { AppointmentDialog } from "@/components/custom/appointment-dialog"
 import { fetchDoctors, fetchNurses, fetchAppointments, fetchRequests } from "@/utils/api"
-import { Request } from "@/types/request"
 
 export default function DashboardPage() {
   const { isLoaded, isSignedIn, user } = useUser()
@@ -93,21 +92,13 @@ export default function DashboardPage() {
   // Calculate dashboard statistics
   const pendingRequestsCount = requests?.filter((req) => req.state === "pending")?.length || 0
   const totalAppointmentsCount = appointments?.length || 0
-
-  // Fixed calculation for available appointments - ensure we're checking the correct field names
-  const availableAppointmentsCount =
-    appointments?.filter((app) => {
-      // Check if the appointment is available based on:
-      // 1. No requests associated with it or all requests are not in 'approved' state
-      // 2. Registration is not mandatory (public appointments)
-      const hasApprovedRequest = app.requests?.some((req: Request) => req.state === "approved")
-      return (
-        !hasApprovedRequest &&
-        (app.status === "available" || app.status === "Available" || !app.registration_mandatory)
-      )
-    })?.length || 0
-
-  const treatedPatientsCount = role === "doctor" ? 156 : 3 // Mock data for now, would be calculated from actual medical records
+  // Calculate available appointments - an appointment is available if it doesn't have an associated request
+  const availableAppointmentsCount = appointments?.length
+    ? appointments.filter((appointment) => {
+        // Check if this appointment ID doesn't exist in any request
+        return !requests?.some((request) => request.appointment_id === appointment.id)
+      }).length
+    : 0
 
   // Loading state
   if (
@@ -129,9 +120,8 @@ export default function DashboardPage() {
     <DashboardShell>
       <DashboardHeader
         heading='Přehled'
-        text={`Vítejte zpět, ${user?.firstName} ${user?.lastName}. Máte ${pendingRequestsCount} čekajících žádostí.`}
+        text={`Vítejte zpět, ${user?.firstName} ${user?.lastName}. Máte ${pendingRequestsCount} čekajících žádanky.`}
         role={role}
-        onRoleChange={setRole}
       >
         <Button onClick={() => setIsCreateAppointmentOpen(true)}>
           <Plus className='mr-2 h-4 w-4' />
@@ -151,7 +141,7 @@ export default function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Čekající žádosti</CardTitle>
+            <CardTitle className='text-sm font-medium'>Čekající žádanky</CardTitle>
             <FileText className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
@@ -169,25 +159,11 @@ export default function DashboardPage() {
             <p className='text-xs text-muted-foreground'>Na příštích 7 dní</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              {role === "doctor" ? "Ošetřených pacientů" : "Přidělení lékaři"}
-            </CardTitle>
-            <User className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{treatedPatientsCount}</div>
-            <p className='text-xs text-muted-foreground'>
-              {role === "doctor" ? "Tento měsíc" : "Aktivní lékaři"}
-            </p>
-          </CardContent>
-        </Card>
       </div>
       <Tabs defaultValue='calendar' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='calendar'>Kalendář</TabsTrigger>
-          <TabsTrigger value='requests'>Žádosti pacientů</TabsTrigger>
+          <TabsTrigger value='requests'>žádanky pacientů</TabsTrigger>
         </TabsList>
         <TabsContent value='calendar' className='space-y-4'>
           <AppointmentCalendar

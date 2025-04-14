@@ -73,19 +73,26 @@ export function AppointmentDialog({ open, onOpenChange, userRole }: AppointmentD
       setSelectedDoctor("")
     }
   }, [userRole, doctors])
-
-  // Mutation for creating a new appointment
   const createAppointmentMutation = useMutation({
     mutationFn: createAppointment,
-    onSuccess: () => {
-      toast.success("Termín byl úspěšně vytvořen")
-      queryClient.invalidateQueries({ queryKey: ["appointments"] })
-      onOpenChange(false)
-      resetForm()
+    onSuccess: (data) => {
+      // *** Log success and received data ***
+      console.log("AppointmentDialog: createAppointmentMutation onSuccess - Data received:", data)
+      toast.success("Termín byl úspěšně vytvořen.")
+      queryClient.invalidateQueries({ queryKey: ["appointments"] }) // Invalidate queries to refetch
+      resetForm() // Reset form fields
+      onOpenChange(false) // Close the dialog
+      console.log("AppointmentDialog: createAppointmentMutation onSuccess - Finished processing.")
     },
     onError: (error) => {
-      toast.error("Nepodařilo se vytvořit termín")
-      console.error("Error creating appointment:", error)
+      // *** Log error ***
+      console.error("AppointmentDialog: createAppointmentMutation onError - Error:", error)
+      toast.error(`Nepodařilo se vytvořit termín: ${error.message}`)
+      console.log("AppointmentDialog: createAppointmentMutation onError - Finished processing.")
+    },
+    onSettled: () => {
+      // *** Log when mutation is settled (either success or error) ***
+      console.log("AppointmentDialog: createAppointmentMutation onSettled - Mutation finished.")
     },
   })
 

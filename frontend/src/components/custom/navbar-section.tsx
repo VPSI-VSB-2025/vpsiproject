@@ -30,6 +30,10 @@ const Navbar: React.FC<NavbarProps> = ({ links }) => {
               {link.name}
             </Link>
           ))}
+          {/* Add History link */}
+          <Link href='/history' key='history' className='text-sm font-medium hover:text-primary'>
+            Historie a Testy
+          </Link>
         </nav>
 
         <div className='hidden lg:flex items-center gap-4'>
@@ -39,14 +43,21 @@ const Navbar: React.FC<NavbarProps> = ({ links }) => {
                 Přihlásit
               </Button>
             </SignInButton>
-            <SignUpButton forceRedirectUrl={"/protected/role/"}>
+            {/*             <SignUpButton forceRedirectUrl={"/protected/role/"}>
               <Button className='cursor-pointer bg-transparent border-2 border-primary text-slate-700'>
                 Registrace
               </Button>
-            </SignUpButton>
+            </SignUpButton> */}
           </SignedOut>
           <SignedIn>
             <UserButton />
+            <Link
+              href='/protected/dashboard'
+              key='history'
+              className='text-sm font-medium hover:text-primary'
+            >
+              Systém pro Doktory
+            </Link>
           </SignedIn>
         </div>
       </div>
@@ -81,6 +92,10 @@ const MobileMenu = () => {
             <nav className='mt-8 flex flex-col gap-6'>
               <Link href='#home' className='text-lg font-medium' onClick={toggleNavbar}>
                 Home
+              </Link>
+              {/* Add History link to mobile menu */}
+              <Link href='/history' className='text-lg font-medium' onClick={toggleNavbar}>
+                History
               </Link>
               <Link href='#service' className='text-lg font-medium' onClick={toggleNavbar}>
                 Services
