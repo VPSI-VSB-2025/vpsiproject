@@ -8,7 +8,7 @@ import { MedicalRecord } from "@/types/medical_record"
 import { Request } from "@/types/request"
 import { RequestType } from "@/types/request_type"
 
-const API_BASE_URL = "http://localhost:8000"
+const API_BASE_URL = "https://vpsiproject.onrender.com"
 
 // Create axios instance with base URL
 const api = axios.create({
