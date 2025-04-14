@@ -43,35 +43,6 @@ const links = [
 
 type FormData = z.infer<typeof formSchema>
 
-// Define interfaces for the expected data structure (align with backend schemas)
-// These might already be in api.ts, ensure consistency or import if needed
-interface Request {
-  id: number
-  state: string
-  created_at: string
-  description?: string
-  // Add other relevant fields from RequestOut
-}
-
-interface Appointment {
-  id: number
-  event_type: string
-  date_from: string
-  date_to: string
-  // Add other relevant fields from AppointmentOut
-}
-
-interface Test {
-  id: number
-  test_date: string
-  results: string
-  state: string
-  created_at: string
-  // Add other relevant fields from TestOut
-}
-
-// HistoryData is imported from api.ts
-
 export default function HistoryPage() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -95,12 +66,7 @@ export default function HistoryPage() {
     mutation.mutate(data)
   }
 
-  const {
-    data: types,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data: types } = useQuery({
     queryKey: ["tests"],
     queryFn: fetchTestTypes,
   })

@@ -26,6 +26,6 @@ def get_patient_history_endpoint(
         raise e
     except Exception as e:
         # Log the full exception traceback
-        logger.exception("An unexpected error occurred while fetching patient history.". e)
+        logger.exception("An unexpected error occurred while fetching patient history.", e)
         # Return a generic 500 error with a detail message
         raise HTTPException(status_code=500, detail="An internal server error occurred.")

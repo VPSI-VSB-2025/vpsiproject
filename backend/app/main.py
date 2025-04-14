@@ -10,7 +10,7 @@ from app.api.nurses import router as nurses_router
 from app.api.list_all_terms import router as all_terms_router
 from app.api.appointments import router as appointments_router
 from app.api.requests import router as requests_router
-from app.api.test_types import router as test_types_router 
+from app.api.test_types import router as test_types_router
 from app.api.history import router as history_router
 from app.api.tests import router as tests_router
 
@@ -43,7 +43,6 @@ app.include_router(requests_router, prefix="/requests", tags=["requests"])
 app.include_router(test_types_router, prefix="/test-types", tags=["test-types"])
 app.include_router(history_router, prefix="/history", tags=["History"])
 app.include_router(tests_router, prefix="/tests", tags=["Tests"])
-
 
 if __name__ == "__main__":
     import uvicorn

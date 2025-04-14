@@ -16,7 +16,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Calendar, FileText, Home, LogOut, Settings, User, Users } from "lucide-react"
+import { FileText, Home, LogOut } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { SignOutButton, useUser } from "@clerk/nextjs"

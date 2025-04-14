@@ -1,5 +1,5 @@
 "use client"
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs"
 import { Heart, Menu, Phone, X } from "lucide-react"
 import Link from "next/link"
 import { Button } from "../ui/button"

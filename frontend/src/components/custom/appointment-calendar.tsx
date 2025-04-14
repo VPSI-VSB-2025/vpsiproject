@@ -27,14 +27,12 @@ import {
 import { toast } from "sonner"
 import { AppointmentDetailsDialog } from "./appointment-details-dialog" // Import the new component
 import { useUser } from "@clerk/nextjs"
-import { Request } from "@/types/request" // Import Request type if not already imported
 
 interface AppointmentCalendarProps {
   userRole: "doctor" | "nurse"
   onCreateAppointment: () => void
 }
 
-// Define a type for the combined appointment and request data
 type CalendarAppointment = {
   id: number // Appointment ID
   time: string
